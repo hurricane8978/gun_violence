@@ -64,9 +64,20 @@ clean_unemploy =
   mutate(series_id = replace(series_id, series_id == "LASST530000000000003", "Washington")) %>% 
   mutate(series_id = replace(series_id, series_id == "LASST540000000000003", "West Virginia")) %>% 
   mutate(series_id = replace(series_id, series_id == "LASST550000000000003", "Wisconsin")) %>% 
-  mutate(series_id = replace(series_id, series_id == "LASST560000000000003", "Wyoming"))
+  mutate(series_id = replace(series_id, series_id == "LASST560000000000003", "Wyoming")) 
+ 
+
+
 ```
 
+```{r}
+library(plotly)
+clean_unemploy =  dplyr::rename(clean_unemploy, state = series_id) 
+clean_unemploy %>%
+  mutate(label = fct_inorder(label)) %>% 
+  plot_ly(x = ~label, y = ~value, color = ~state, type = "scatter", mode = "lines", colors = "viridis")
+  
+```
 
 ```{r covid data if still needed, eval=FALSE}
 covid = GET("https://data.cdc.gov/resource/9mfq-cb36.csv", query = list("$limit" = 50000)) %>% content("parsed")
