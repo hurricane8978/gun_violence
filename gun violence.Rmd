@@ -11,6 +11,7 @@ library(rvest)
 library(httr)
 library(ggalt)
 library(ggforce)
+library(plotly)
 
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -66,9 +67,9 @@ year_massshooting %>%
   ggplot(aes(year,number_mass_shooting)) + geom_col(color="lightblue",size=1.6,fill="lightblue",position = "stack",width=0.3,size=6) + geom_text(aes(label = number_mass_shooting),size=4,position=position_dodge(1),vjust=-0.4,angle = 0) + labs(x="Year",y="Mass Shooting",title= "Mass shooting in US",caption = "Only frist 11 months data in 2021",colour = "Cylinders",tag = "A") +geom_line(size=1,color="lightblue") + geom_point(color="blue",size=1) 
 
 year_massshooting %>% 
-  ggplot(aes(year,number_mass_shooting)) + geom_col(color="lightblue",size=1.6,fill="lightblue",position = "stack",width=0.3,size=6) + geom_text(aes(label = number_mass_shooting),size=4.5,position=position_dodge(1),vjust=-0.6,angle = 0) + labs(x="Year",y="Mass Shooting",title= "Mass shooting in US from 2018 to 2021",caption ="Source:www.gunviolencearchive.org \n (Note:only frist 11 months data in 2021) ",colour = "Cylinders",tag = "A") +geom_line(size=1,color="lightblue") + geom_point(color="blue",size=1) + theme(plot.background = element_rect(colour = "lightblue", size = 3, linetype = 1, 
-    fill = "white"), plot.title = element_text(colour = "black", face = "bold", 
-    size = 20, vjust = 2.5, hjust = 0.3), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black")) + scale_y_continuous(limits = c(0, 700))
+  ggplot(aes(year,number_mass_shooting)) + geom_col(color="lightblue",size=1.6,fill="lightblue",position = "stack",width=0.3,size=6) + geom_text(aes(label = number_mass_shooting),size=4.5,position=position_dodge(1),vjust=-0.6,angle = 0) + labs(x="Year",y="Mass Shooting",title= "Mass shooting in US from 2018 to 2021",caption ="Source:www.gunviolencearchive.org \n (Note:only frist 11 months data in 2021) ",colour = "Cylinders",tag = "A") +geom_line(size=1,color="lightblue") + geom_point(color="blue",size=1) + 
+  theme(plot.background = element_rect(colour = "lightblue", size = 3, linetype = 1, fill = "white"), plot.title = element_text(colour = "black", face = "bold", size = 20, vjust = 2.5, hjust = 0.3), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black")) + 
+  scale_y_continuous(limits = c(0, 700))
 ```
 
 ## bar 
@@ -117,20 +118,28 @@ year_month_state_massshooting %>%
     fill = "white"), plot.title = element_text(colour = "black", face = "bold", 
     size = 12, vjust = 2.5, hjust = 0.3), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black")) 
 
+
+
+
+
 year_month_state_massshooting %>% 
   mutate(year_month=fct_inorder(year_month)) %>% 
   group_by(year_month) %>% 
   count() %>% 
   rename(number_mass_shooting=n) %>% 
-  ggplot(aes(year_month,number_mass_shooting))  + geom_xspline(aes(group=1),color="lightblue",size=0.7) + geom_point(color="lightblue",size=2) +
+  ggplot(aes(year_month,number_mass_shooting)) +
+
+  geom_xspline(aes(group=1),color="lightblue",size=0.7) + geom_point(color="lightblue",size=2) +
   
   geom_segment(aes(x = 25, y = 10, xend = 25, yend = 32) ,colour = "lightblue",linetype="dashed") + 
-  geom_text(aes(x=25, y= 30, label = "first case of death in US " ), colour = "red", vjust = -2, hjust = 0.5, size = 2.5)  + 
+  geom_text(aes(x=25, y= 30, label = "first case of death in US " ), colour = "red", vjust = -2, hjust = 0.5, size = 3)  + 
   
   
-  labs(x = "Month Year ", y = "Mass Shooting", title = "Mass shooting in US from January 2018 to October 2021",caption="Source:www.gunviolencearchive.org",tag="B") + theme(plot.background = element_rect(colour = "lightblue", size = 3, linetype = 1, 
+  labs(x = "Month Year ", y = "Mass Shooting", title = "Mass shooting in US from \n January 2018 to October 2021",caption="Source:www.gunviolencearchive.org",tag="B") + theme(plot.background = element_rect(colour = "lightblue", size = 3, linetype = 1, 
     fill = "white"), plot.title = element_text(colour = "black", face = "bold", 
-    size = 12, vjust = 2.5, hjust = 0.3), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black")) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))
+    size = 14, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black")) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1)) 
+ 
+
 
 
 
@@ -149,11 +158,16 @@ mass_shooting_state=
   group_by(state) %>%
   count() %>% 
   select(number_mass_shooting=n) %>% 
-  arrange(number_mass_shooting)
+  arrange(number_mass_shooting) %>% 
+  mutate(Number=number_mass_shooting)
 
 mass_shooting_state %>% 
-  ggplot(aes(x=fct_reorder(state,number_mass_shooting),y=number_mass_shooting)) + geom_bar(stat = "identity", fill = "lightblue", colour = "black",position = "dodge") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))+ labs(y= "Mass Shooting", x = "State",title="Massing shooting in 48 states",caption="Source:www.gunviolencearchive.org")
+  ggplot(aes(x=fct_reorder(state,number_mass_shooting),y=number_mass_shooting,fill=Number)) + geom_bar(stat = "identity", colour = "black",position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))+ labs(y= "Mass Shooting", x = "State",title="Massing shooting in 48 states of US",caption="Source:www.gunviolencearchive.org",tag="C") +
+  
+  theme(plot.background = element_rect(colour = "yellow", size = 3, linetype = 1, 
+  fill = "white"), plot.title = element_text(colour = "black", face = "bold", 
+  size = 18, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black",size=6)) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1)) 
 ```
 
 
@@ -177,19 +191,33 @@ year_state_massshooting=
 
 year_state_massshooting %>% 
   filter(state%in%c("Illinois","California","Texas","Florida","Pennsylvania","Louisiana","New York","Ohio")) %>% 
-  ggplot(aes(x=year,y=number_mass_shooting,color=state)) + geom_line(size=1.3) +  facet_grid(~fct_reorder(state,number_mass_shooting))+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))
+  ggplot(aes(x=year,y=number_mass_shooting,color=state)) +  +  facet_grid(~fct_reorder(state,number_mass_shooting))+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))
+
+year_state_massshooting %>% 
+  filter(state%in%c("Illinois","California","Texas","Florida","Pennsylvania","Louisiana","New York","Ohio")) %>% 
+  ggplot(aes(x=year,y=number_mass_shooting,fill=state)) + geom_col(size=1.3) +  facet_grid(~fct_reorder(state,number_mass_shooting))+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1)) + labs(title="Mass shooting in top 8 states from 2018 to 2021",caption="Source:www.gunviolencearchive.org",tag="D") + theme(plot.background = element_rect(colour = "lightblue", size = 3, linetype = 1, 
+  fill = "white"), plot.title = element_text(colour = "black", face = "bold", 
+  size = 14, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black",size=10))
 
 ```
 
 ```{r}
-year_state_massshooting %>% 
-  filter(state%in%c("Illinois","California","Texas","Florida","Pennsylvania","Louisiana","New York","Ohio")) %>% 
-  group_by(year) %>% 
-  ggplot(aes(y=number_mass_shooting,color=state)) + geom_bar(size=1.3) +  facet_grid(~fct_reorder(state,number_mass_shooting))+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))
+year_state_injured_killed=
+  gun_violence_state_df %>%
+  group_by(state,year) %>% 
+  mutate(Victims=number_year_killed + number_year_injured,Year=year) %>% 
+  select(Year,state,number_year_killed,number_year_injured,Victims) %>% 
+  distinct()
 
-gun_violence_state_df %>% 
   
-  ggplot(aes(state)) + geom_bar()
+year_state_injured_killed %>% 
+  filter(state%in%c("Illinois","California","Texas","Florida","Pennsylvania","Louisiana","New York","Ohio")) %>% 
+  ggplot(aes(Year,Victims,fill=state)) + geom_col(width=0.4) + labs(title="Victims in top 8 states of US",caption ="Source:www.gunviolencearchive.org") +
+  theme(plot.background = element_rect(colour = "lightblue", size = 3, linetype = 1, fill = "white"), plot.title = element_text(colour = "black", face = "bold", size = 20, vjust = 2.5, hjust = 0.3), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black")) 
+  
+  
+  
+  
 ```
 
 
