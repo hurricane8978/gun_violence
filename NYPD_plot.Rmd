@@ -1,6 +1,8 @@
 ---
 title: "NYPD_shooting"
 output: html_document
+author: "Tianchuan Gao"
+date: "12/9/2021"
 ---
 
 ```{r setup, include=FALSE}
@@ -32,7 +34,7 @@ df = bind_rows(historic_NYPD_df,year_to_date_df)
 ```
 
 ## Change through date in month
-
+this is a plot showing the number of shooting incidents in NYC from 2018.1 to 2021.1 in months. we can see a big increase in April 2020 which match the time when COVID-19 outbreak happened in NYC. We assume the COVID-19 outbreak caused the increase of unemployment which lead to a big increase in shooting incidents.
 ```{r echo=TRUE}
 df_time = df %>%
   group_by(year,month) %>%
@@ -50,42 +52,9 @@ df_time%>%
 ggsave("NY_change.png")
 ```
 
-## Race comparison pie
-```{r eval=FALSE, include=FALSE}
-df_race_before = df %>%
-  arrange(year,month,day)%>%
-  slice(1206:2205) %>%
-  group_by(VIC_RACE) %>%
-  summarise(count=n(),
-            ratio=(count/1000)*100,
-            time="before")%>%
-   arrange(count)
-df_race_after = df %>%
-  arrange(year,month,day)%>%
-  slice(2205:4355) %>%
-  group_by(VIC_RACE) %>%
-  summarise(count=n(),
-            ratio=(count/2151)*100,
-            time="after")%>%
-  arrange(count)
-blank_theme <- theme_minimal()+
-  theme(
-  axis.title.x = element_blank(),
-  axis.title.y = element_blank(),
-  panel.border = element_blank(),
-  panel.grid=element_blank(),
-  axis.ticks = element_blank(),
-  plot.title=element_text(size=14, face="bold")
-  )
-p_before=ggplot(df_race_before,aes(x=1,y=count,fill=VIC_RACE))+geom_bar(width = 1, stat = "identity")+
-  coord_polar(theta = "y",start = 0)  + scale_fill_brewer("Blues") + blank_theme +
-  theme(axis.text.x=element_blank())+
-  geom_text(aes(y = value/3 + c(0, cumsum(value)[-length(value)]), 
-                label = percent(value/100)), size=5)
-
-```
 
 ## Boro comparison
+this plot compares the shooting incidents in five boroughs in NYC. we set April 2020 as the outbreak time and before covid means 365 days before April 2020 and post covid means 365 days after April 2020. we can see from the plot that Broolyn has the most shooting incidents and Staten Island has the least. we can the after covid, all boroughs increases in shooting incidents numbers while the order remains the same.
 ```{r}
 df_boro_before = df %>%
   arrange(year,month,day)%>%
@@ -109,43 +78,8 @@ ggsave("NY_boro_comparison.png")
 
 ```
 
-## Time Period comparison
-```{r}
-df_period_before = df %>%
-  arrange(year,month,day)%>%
-  slice(1206:2205) %>%
-  separate(OCCUR_TIME,into = c("hour","minute","second"),sep = ":")%>%
-  mutate(hour=as.numeric(hour),
-    time_period = case_when(
-    hour>=0 & hour<6 ~ "MIDNIGHT",
-    hour>=6 & hour<12 ~ "MORNING",
-    hour>=12 & hour<18 ~ "AFTERNOON",
-    hour>=18 & hour<=23 ~ "EVENING"))%>%
-  group_by(time_period) %>%
-  summarise(count=n(),
-            ratio=count/1000,
-            time="before")
-
-df_period_after = df %>%
-  arrange(year,month,day)%>%
-  slice(2205:4355) %>%
-  separate(OCCUR_TIME,into = c("hour","minute","second"),sep = ":")%>%
-  mutate(hour=as.numeric(hour),
-         time_period = case_when(
-           hour>=0 & hour<6 ~ "MIDNIGHT",
-           hour>=6 & hour<12 ~ "MORNING",
-           hour>=12 & hour<18 ~ "AFTERNOON",
-           hour>=18 & hour<=23 ~ "EVENING"))%>%
-  group_by(time_period) %>%
-  summarise(count=n(),
-            ratio=count/2151,
-            time="after")
-df_period=bind_rows(df_period_before,df_period_after)
-df_period%>%
-  ggplot(aes(x=fct_reorder(time_period,count),y=count,fill=time))+geom_bar(stat = "identity")+ 
-  labs(x = "Different time periods", y = "Shooting Incidents reported", title = "Shooting Incidents Reported by NYPD From different time periods in NYC")
-ggsave("NY_time_comparison.png")
-```
+## time period and boro cross comparison
+this plot cross-compared time periods and five boroughs. we define 0-6am as midnight, 6am-12pm as morning, 12pm-6pm as afternoon and 6pm to 11:59 as evening. the darker the box is ,the more shooting incidents happen. we can see from the plot that evening and midnight in Brooklyn and Bronx is the most dangerous as they have the most shooting incidents.
 
 ```{r}
 df_boro_time = df %>%
