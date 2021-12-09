@@ -127,10 +127,29 @@ number_1517 =
   select(-incident_id,-address,-operations) %>%
   separate(incident_date,into=c("date","year"),sep=",") %>%
   separate(date, into = c("month", "day"), sep = " (?=[^ ]+$)") %>%
-  group_by(year,month,state) %>% 
-  mutate(number_mass_shooting = dplyr::n()) %>% 
-  summarize()
+  group_by(month,year,state) %>% 
+  summarise(n_mass_shooting=n()) %>% 
+  filter(state=="Illinois") %>%
+  mutate(month=as_factor(month)) %>% 
+  mutate(month=factor(month.name[month],levels=month.name)) 
+
   
+  
+  add_df=
+  tibble(month=c("January","April","October"),
+         year=c("2015","2015","2017"),
+         state=c("Illinois","Illinois","Illinois"), 
+         n_mass_shooting=c(0,0,0)) %>%  
+    mutate(month=factor(month))
+    
+new_df=
+    bind_rows(number_1517,add_df) %>% 
+    mutate(month=factor(month.name[month],levels=month.name),year=as.numeric(year)) %>% 
+    group_by(year,month) %>% 
+    arrange(year,month)
+
+
+
   
 ```
 

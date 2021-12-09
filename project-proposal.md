@@ -12,6 +12,8 @@ Tianchuan Gao(tg2753)
 
 ## The tentative project title
 
+gun violence trend in US
+
 Relationship between gun crime rate and Covid-19 outbreak in US
 
 ## The motivation for this project
