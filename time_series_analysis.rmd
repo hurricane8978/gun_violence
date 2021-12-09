@@ -45,25 +45,25 @@ The data used in our time series analysis is from 2018-2021 in Illinois. It reco
 
 ## Trend and seasonality exploration
 
-First, let's see the general trend and seasonality of our data between 2018-2021 and generate the time series. 
+First, let's see the general trend and seasonality of our data between 2018-2021 and generate the time series. From the plot below, we can see a general increase in the number of mass shooting throughout 2018-2021, and there seems to be a seasonality within each year.
 
-```{r echo=FALSE}
+```{r }
 month.ts = ts(illinois, start = 2018, frequency = 12)
 plot(decompose(month.ts, type = "multiplicative"))
 ```
 
 ## Transformation and necessary tests
-Then, we  did a box-cox transformation to make the variance equal. Because the lambda we got is `r BoxCox.lambda(month.ts)`, we decided to square root our series according to the common powers in box-cox transformation. 
+Then, we  did a box-cox transformation to make the variance equal. Because the lambda we got is `r BoxCox.lambda(month.ts)`, we decided to square root our series according to the common powers in box-cox transformation. and the new lambda we got is `r BoxCox.lambda(sqrt(month.ts))`. It is close to one, which means our series have an equal variance now.
 
 ```{r warning=FALSE}
 lambda <- BoxCox.lambda(month.ts)
 d1 = sqrt(month.ts)
-BoxCox.lambda(d1)
+## BoxCox.lambda(d1)
 ```
 
 After that, we need to stationarize the series. Here, we used Augmented Dickey-Fuller Test to see if the series is stationary. The p-value is less than 0.01 which means our series is already stationary and don't need any further transformation.
 
-Meanwhile, we also performed Ljung-Box test to check if the pattern we obtained from the series is because of randomness. The p-values are all less than 0.05, and we conclude that the correlation is not due to randomness.
+Meanwhile, we also performed Ljung-Box test to check if the pattern we obtained from the series is because of randomness. The p-values are all less than 0.01, and we conclude that the correlation is not due to randomness.
 
 ```{r eval = FALSE, warning=FALSE}
 ## reject null hypothesis, therefore it is stationary
@@ -100,7 +100,7 @@ fit_auto = auto.arima(d1)
 After that, we checked the residual and the Ljung-box test results showed that the p-value is greater than 0.05, which means the residuals are white noise and follows normal distribution. Thus, we could conclude that our model is valid.
 
 
-```{r }
+```{r results='hide'}
 checkresiduals(auto.arima(d1))## Residuals are white noise
 ```
 
@@ -112,7 +112,25 @@ Finally, we drew the forecast plot for the number of mass shooting in Illinois i
 d1 %>% 
   auto.arima() %>% 
   forecast(h = 12) %>% 
-  autoplot()
+  autoplot(ylab = "square-rooted number of mass shooting", main = "Forecast of number of mass shooting in 2022 from ARIMA model")
 ```
 
+##2015-2019
+
+```{r}
+number_2015 = read_csv("mass shooting 2015.csv")
+number_2016 = read_csv("mass shooting 2016.csv")
+number_2017 = read_csv("mass shooting 2017.csv")
+number_1517 = 
+  bind_rows(number_2015, number_2016, number_2017) %>% 
+  janitor::clean_names() %>% 
+  select(-incident_id,-address,-operations) %>%
+  separate(incident_date,into=c("date","year"),sep=",") %>%
+  separate(date, into = c("month", "day"), sep = " (?=[^ ]+$)") %>%
+  group_by(year,month,state) %>% 
+  mutate(number_mass_shooting = dplyr::n()) %>% 
+  summarize()
+  
+  
+```
 
