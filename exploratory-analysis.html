@@ -255,7 +255,7 @@ $(document).ready(function () {
 </li>
 <li class="dropdown-header">Regression Model</li>
 <li>
-  <a href="shiny_dashboard.html">Shiny</a>
+  <a href="https://gun-violence-p8105.shinyapps.io/shiny/">Shiny</a>
 </li>
 <li>
   <a>
@@ -326,12 +326,12 @@ read_csv(&quot;data/gun violence/mass shootings(all years).csv&quot;) %&gt;%
   count() %&gt;% 
   rename(number_mass_shooting=n) %&gt;% 
   ggplot(aes(year_month,number_mass_shooting)) + theme_bw(base_size=15 ) +
-  geom_xspline(aes(group=1),color=&quot;lightblue&quot;,size=1.3) + geom_point(color=&quot;lightblue&quot;,size=2.5) +
-  geom_segment(aes(x = 25, y = 10, xend = 25, yend = 32) ,size=1.6,colour = &quot;lightblue&quot;,linetype=&quot;dashed&quot;) + 
-  geom_text(aes(x=25, y= 30, label = &quot;first case of death in US &quot; ), colour = &quot;red&quot;, vjust = -2, hjust = 0.5, size = 6)  + 
+  geom_xspline(aes(group=1),color=&quot;lightblue&quot;,size=0.7) + geom_point(color=&quot;lightblue&quot;,size=1.5) +
+  geom_segment(aes(x = 25, y = 10, xend = 25, yend = 29) ,size=1.3,colour = &quot;lightblue&quot;,linetype=&quot;dashed&quot;) + 
+  geom_text(aes(x=25, y= 30, label = &quot;first case of death in US &quot; ), colour = &quot;red&quot;, vjust = -2, hjust = 0.5, size = 3)  + 
   labs(x = &quot;Month Year &quot;, y = &quot;Mass Shooting&quot;, title = &quot;National mass shooting in US &quot;,caption=&quot;(Source:www.gunviolencearchive.org)&quot;) + theme( plot.title = element_text(colour = &quot;black&quot;, face = &quot;bold&quot;, 
-    size = 26, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), &quot;inches&quot;),axis.text=element_text(colour=&quot;black&quot;,size=13),axis.title=element_text(size=20)) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
+    size = 20, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), &quot;inches&quot;),axis.text=element_text(colour=&quot;black&quot;,size=8),axis.title=element_text(size=10)) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1),plot.caption = element_text(size=7)) </code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-2-1.png" width="100%" /></p>
 <p>The plot above shows a fluctutation in national mass shooting number in US from January 2018 to October 2021. From the plot, we can reach two conclusions.First, there is a seasonal pattern in national mass shooting that in every year, basically, number of mass shooting will begin to increase from January and reach its peak in summer and then reduce to bottom. Second, 2020 saw a huge increase in mass shootings compared with previous years, and 2021 is trending a little lower. After data processing in R, there is nationally mass shootings jumped nearly 50% during a pandemic with crippling unemployment, violent protests and idle youth.</p>
 <pre class="r"><code>mass_shooting_state=
   gun_violence_state_df %&gt;% 
@@ -342,10 +342,10 @@ read_csv(&quot;data/gun violence/mass shootings(all years).csv&quot;) %&gt;%
   mutate(Number=number_mass_shooting)</code></pre>
 <pre><code>## Adding missing grouping variables: `state`</code></pre>
 <pre class="r"><code>mass_shooting_state %&gt;% 
-  ggplot(aes(x=fct_reorder(state,number_mass_shooting),y=number_mass_shooting,fill=Number)) + geom_bar(stat = &quot;identity&quot;, colour = &quot;black&quot;,position = &quot;dodge&quot;) + theme_bw(base_size=15 ) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))+ labs(y= &quot;Mass Shooting&quot;, x = &quot;State&quot;,title=&quot;Top States with highest number of Mass Shooting&quot;,caption=&quot;(Source:www.gunviolencearchive.org)&quot;) + theme( plot.title = element_text(colour = &quot;black&quot;, face = &quot;bold&quot;, 
-  size = 32, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), &quot;inches&quot;),axis.text=element_text(colour=&quot;black&quot;,size=6)) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1,size=14),axis.text.y = element_text(size=14),axis.title=element_text(size=20)) </code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+  ggplot(aes(x=fct_reorder(state,number_mass_shooting),y=number_mass_shooting,fill=Number)) + geom_bar(stat = &quot;identity&quot;, colour = &quot;black&quot;,position = &quot;dodge&quot;) + theme_bw( ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))+ labs(y= &quot;Mass Shooting&quot;, x = &quot;State&quot;,title=&quot;Top States with highest \n number of Mass Shooting&quot;,caption=&quot;(Source:www.gunviolencearchive.org)&quot;) + theme( plot.title = element_text(colour = &quot;black&quot;, face = &quot;bold&quot;, 
+  size = 15, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), &quot;inches&quot;),axis.text=element_text(colour=&quot;black&quot;,size=3)) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1,size=8),axis.text.y = element_text(size=8),axis.title=element_text(size=10),plot.caption = element_text(size=7)) </code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-3-1.png" width="100%" /></p>
 <p>We arrange 48 states in an ascending way according to the number of mass shooting from 2018 to 2021. As shown in the bar chart, top 8 states are Illinois, California, Texas, Florida, Pennsylvania, Louisiana, New York and Ohio respectively. As one of city in Illinois, Chicago Leads the nation in mass shootings, averaging about one per week.</p>
 
 
