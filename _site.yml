@@ -6,7 +6,11 @@ navbar:
     - text: "About"
       href: About.html
     - text: "Exploratory Analyses"
-      href: exploratory-analysis.html
+      menu:
+      - text: "National Visualization Analysis"
+      href: National-visualization-analysis.html
+      - text: "NY Visualization Analysis"
+      href: NY-visualization-analysis.html
     - text: "Time Series Analysis Model"
       href: time_series_analysis.html       
     - text: "Regression Model"

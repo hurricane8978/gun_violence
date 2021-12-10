@@ -1,6 +1,11 @@
 ---
 title: "National Visualization Analysis"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+    
 ---
 
 
@@ -33,7 +38,7 @@ scale_color_discrete = scale_color_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-```{r echo=FALSE,message = FALSE}
+```{r message = FALSE}
 gun_violence_state_df=
 read_csv("data/gun violence/mass shootings(all years).csv") %>% 
   janitor::clean_names() %>% 
@@ -47,7 +52,7 @@ read_csv("data/gun violence/mass shootings(all years).csv") %>%
   select(-city_or_county)
 ```
 
-```{r echo=FALSE,message = FALSE}
+```{r message = FALSE}
 gun_violence_state_df=
 read_csv("data/gun violence/mass shootings(all years).csv") %>% 
   janitor::clean_names() %>% 
@@ -63,7 +68,7 @@ read_csv("data/gun violence/mass shootings(all years).csv") %>%
 
 
 
-```{r echo=FALSE,message = FALSE}
+```{r message = FALSE}
 year_month_state_massshooting=
   gun_violence_state_df %>%
   group_by(year,month,state) %>% 
@@ -93,7 +98,7 @@ year_month_state_massshooting %>%
 
 The plot above shows a fluctutation in national mass shooting number in US from January 2018 to October 2021. From the plot, we can reach two conclusions.First, there is a seasonal pattern in national mass shooting that in every year, basically, number of mass shooting will begin to increase from January and reach its peak in summer and then reduce to bottom. Second, 2020 saw a huge increase in mass shootings compared with previous years, and 2021 is trending a little lower. After data processing in R, there is nationally mass shootings jumped nearly 50% during a pandemic with crippling unemployment, violent protests and idle youth.
 
-```{r echo=FALSE,message = FALSE}
+```{r message = FALSE}
 unemploy_gun <- read_csv("data/unemployment_gun.csv")
 UNRATE <- read_csv("data/unemployment rate/UNRATE.csv")
 unemploy_gun_IL = unemploy_gun %>% 
@@ -114,7 +119,7 @@ UNRATE %>%
 
 With the increase in shootings, we have paid more attention to shootings and became interested in what factors have affected the sharp increase in shootings. First of all, a set of data from major news newspapers enters our field of vision. Every day we can see reports of unemployment rate in the news. It is very interesting that the unemployment rate has been increasing since the outbreak of the new crown epidemic, which has the same trend as the increase in shootings. Therefore, we mapped the changes in the unemployment rate in the United States two years before and after the outbreak of the new crown. From this picture, we can see that two months after the outbreak of the new crown, the unemployment rate began to increase significantly, which is related to the self-quarantine policy that was just started. Later, society began to adapt to the epidemic, and there was a corresponding decline. However, because the epidemic caused structural damage to the economy, the unemployment rate has remained at a high level ever since.
 
-```{r echo=FALSE,message = FALSE}
+```{r message = FALSE}
 mass_shooting_state=
   gun_violence_state_df %>% 
   group_by(state) %>%
@@ -131,7 +136,7 @@ mass_shooting_state %>%
 
 We arrange 48 states in an ascending way according to the number of mass shooting from 2018 to 2021. As shown in the bar chart, top 8 states are Illinois, California, Texas, Florida, Pennsylvania, Louisiana, New York and Ohio respectively. As one of city in Illinois, Chicago Leads the nation in mass shootings, averaging about one per week.
 
-```{r echo=FALSE,message = FALSE}
+```{r message = FALSE}
 plot_1 = unemploy_gun_IL %>% 
   ggplot(mapping = aes(x = time , y = value, group= 1)) + 
   geom_line()+theme(axis.text.x = element_text(angle = 90)) +
