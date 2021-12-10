@@ -32,7 +32,7 @@ Jie Liu, Xiaoluo Jiao, Ziqian He, Yu Si, Xinyuan Liu, Tianchuan Gao
 
 ## Project motivation
 
-
+This project is overall motivated by two gun violence incidents in 2021 in which two Chinese students  were killed brutally. As a team of Chinese, we feel grief-stricken for our compatriots’ death and it motivates us to question and investigate the safety issues of studying in the U.S as an international student. Under this circumstance, our group members are inspired to study gun violence and explore the relationship between gun crime rate and Covid-19 outbreak.
 
 &nbsp;
 
