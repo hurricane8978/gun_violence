@@ -16,7 +16,7 @@ library(plotly)
 knitr::opts_chunk$set(
   fig.width = 7,
   fig.asp = .8,
-  out.width = "100%"
+  out.width = "90%"
 )
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 options(
@@ -28,7 +28,7 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
-```{r}
+```{r echo=FALSE,message = FALSE}
 gun_violence_state_df=
 read_csv("data/gun violence/mass shootings(all years).csv") %>% 
   janitor::clean_names() %>% 
@@ -44,7 +44,7 @@ read_csv("data/gun violence/mass shootings(all years).csv") %>%
 
 
 
-```{r }
+```{r echo=FALSE,message = FALSE}
 year_month_state_massshooting=
   gun_violence_state_df %>%
   group_by(year,month,state) %>% 
@@ -65,16 +65,16 @@ year_month_state_massshooting %>%
   rename(number_mass_shooting=n) %>% 
   ggplot(aes(year_month,number_mass_shooting)) + theme_bw(base_size=15 ) +
   geom_xspline(aes(group=1),color="lightblue",size=0.7) + geom_point(color="lightblue",size=1.5) +
-  geom_segment(aes(x = 25, y = 10, xend = 25, yend = 29) ,size=1.3,colour = "lightblue",linetype="dashed") + 
+  geom_segment(aes(x = 25, y = 10, xend = 25, yend = 31) ,size=0.5,colour = "red",linetype="dashed") + 
   geom_text(aes(x=25, y= 30, label = "first case of death in US " ), colour = "red", vjust = -2, hjust = 0.5, size = 3)  + 
-  labs(x = "Month Year ", y = "Mass Shooting", title = "National mass shooting in US ",caption="(Source:www.gunviolencearchive.org)") + theme( plot.title = element_text(colour = "black", face = "bold", 
+  labs(x = "Month Year ", y = "Mass Shooting", title = "National Mass Shooting in US ",caption="(Source:www.gunviolencearchive.org)") + theme( plot.title = element_text(colour = "black", face = "bold", 
     size = 20, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black",size=8),axis.title=element_text(size=10)) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1),plot.caption = element_text(size=7)) 
 ```
 
 The plot above shows a fluctutation in national mass shooting number in US from January 2018 to October 2021. From the plot, we can reach two conclusions.First, there is a seasonal pattern in national mass shooting that in every year, basically, number of mass shooting will begin to increase from January and reach its peak in summer and then reduce to bottom. Second, 2020 saw a huge increase in mass shootings compared with previous years, and 2021 is trending a little lower. After data processing in R, there is nationally mass shootings jumped nearly 50% during a pandemic with crippling unemployment, violent protests and idle youth.
 
 
-```{r }
+```{r echo=FALSE,message = FALSE}
 mass_shooting_state=
   gun_violence_state_df %>% 
   group_by(state) %>%
@@ -94,3 +94,83 @@ We arrange 48 states in an ascending way according to the number of mass shootin
 
 
 
+```{r echo=FALSE,message = FALSE}
+historic_NYPD_df = read_csv("data/NYPD_Shooting_Incident_Data__Historic_.csv") %>%
+  separate('OCCUR_DATE', into=c("month","day","year"),sep = "/") %>%
+  filter(year>=2018)
+year_to_date_df = read_csv("data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")%>%
+  separate('OCCUR_DATE', into=c("month","day","year"),sep = "/")
+df = bind_rows(historic_NYPD_df,year_to_date_df) %>% 
+  janitor::clean_names()
+```
+
+
+```{r echo=FALSE,message = FALSE}
+df_time = df %>%
+  group_by(year,month) %>%
+  summarise(count=n()) %>%
+  unite(month,year,month,sep = "/")
+df_time%>%
+  ggplot(aes(x=month, y=count,group=1))+ geom_xspline(color="lightblue",size=0.7) + geom_point(color="lightblue",size=1.5) + theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1)) + 
+  labs(x = "Month Year", y = "Shooting Incidents", title = "Shooting Incidents in NYC",caption="(Source:www.gunviolencearchive.org)") + 
+  geom_segment(aes(x = 27, y = 10, xend = 27, yend = 330) ,colour = "red",linetype="dashed") + 
+  geom_text(aes(x=27, y= 310, label = "first case of death in NYC " ,size=2), colour = "red", vjust = -2.5, hjust = 0.5, size = 3)  + 
+  theme( plot.title = element_text(colour = "black", face = "bold", 
+    size = 18, vjust = 2.5, hjust = 0.3), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black")) +
+  theme( plot.title = element_text(colour = "black", face = "bold", 
+    size = 20, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black",size=8),axis.title=element_text(size=10)) + theme(plot.caption = element_text(size=7)) 
+
+```
+
+this is a plot showing the number of shooting incidents in NYC from January 2018 to January 2021 in months. we can see a big increase in April 2020 which match the time when COVID-19 outbreak happened in NYC. We assume the COVID-19 outbreak caused the increase of unemployment which leads to a big increase in shooting incidents.
+
+```{r echo=FALSE,message = FALSE}
+df_boro_before = df %>%
+  arrange(year,month,day)%>%
+  slice(1206:2205) %>%
+  group_by(boro) %>%
+  summarise(count=n(),
+            ratio=(count/1000)*100,
+            time="Before COVID")
+df_boro_after = df %>%
+  arrange(year,month,day)%>%
+  slice(2205:4355) %>%
+  group_by(boro) %>%
+  summarise(count=n(),
+            ratio=(count/2151)*100,
+            time="POST-COVID")
+df_boro=bind_rows(df_boro_before,df_boro_after)
+df_boro%>%
+  ggplot(aes(x=fct_reorder(boro,count),y=count,fill=time))+geom_bar(stat = "identity",position = "dodge")+ theme_bw() +
+  labs(x = "Boroughs", y = "Shooting Incidents", title = "Shooting Incidents in Five Boros of NYC",caption="(Source:www.gunviolencearchive.org)") + scale_fill_brewer(palette="Paired") +
+  theme( plot.title = element_text(colour = "black", face = "bold", 
+    size = 20, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black",size=8),axis.title=element_text(size=10)) + theme(plot.caption = element_text(size=7)) 
+
+```
+
+this plot compares the shooting incidents in five boroughs in NYC. we set April 2020 as the outbreak time and before covid means 365 days before April 2020 and post covid means 365 days after April 2020. we can see from the plot that Broolyn has the most shooting incidents and Staten Island has the least. we can the after covid, all boroughs increases in shooting incidents numbers while the order remains the same.
+
+```{r echo=FALSE,message = FALSE}
+df_boro_time = df %>%
+  separate(occur_time,into = c("hour","minute","second"),sep = ":")%>%
+  mutate(hour=as.numeric(hour),
+    time_period = case_when(
+    hour>=0 & hour<6 ~ "MIDNIGHT",
+           hour>=6 & hour<12 ~ "MORNING",
+           hour>=12 & hour<18 ~ "AFTERNOON",
+           hour>=18 & hour<=23 ~ "EVENING"))%>%
+  group_by(time_period,boro) %>%
+  summarise(count=n(),
+            ratio=count/1000)
+df_boro_time %>%
+  ggplot(aes(x = time_period, y = boro, fill = count))+ geom_tile() +theme_bw() +
+  scale_fill_viridis_c(direction = -1)+
+  labs(x = "Time Period", y = " Boroughss", title = "Shooting Incidents Cross-compared \n with Time Period and Boros") +
+    theme( plot.title = element_text(colour = "black", face = "bold", 
+    size = 20, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black",size=8),axis.title=element_text(size=10)) + theme(plot.caption = element_text(size=7)) 
+```
+
+This plot cross-compared time periods and five boroughs in New York City. We divide a day into four parts: 0 - 6 am is midnight, 6 - 12 am is morning, 12 - 18 pm is afternoon and 6 - 12 pm is evening. the darker the block is ,the more shooting incidents happen in this boroughs at this period of a day. As shown in the plot, we can find  that  Staten Island is the safest borough in which there are very few shooting incidents occurred here. 
+According to a news report, Staten Islanders are roughly three times more likely to own legal handguns than Brooklyn residents, and about four times more likely to own legal handguns than people in Manhattan and the Bronx. This could be one reason for explaining the higher safety of this borough that more people own a gun, more likely criminals need to bear a risk of death, which deter potential criminals and keep the community's safe.
+In terms of time, evening and midnight are more dangerous and in term of borough Bronx and Brooklyn have most shooting incidents. 
