@@ -301,13 +301,26 @@ read_csv(&quot;data/gun violence/mass shootings(all years).csv&quot;) %&gt;%
   mutate(year=year+2000) %&gt;% 
   select(-city_or_county)</code></pre>
 <pre><code>## Rows: 2000 Columns: 8</code></pre>
-<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+<pre><code>## -- Column specification --------------------------------------------------------
 ## Delimiter: &quot;,&quot;
 ## chr (5): Incident Date, State, City Or County, Address, Operations
 ## dbl (3): Incident ID, # Killed, # Injured</code></pre>
 <pre><code>## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): strings not representable in native encoding will
+## be translated to UTF-8</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00C4&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00D6&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00E4&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00F6&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00DF&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00C6&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00E6&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00D8&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00F8&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00C5&gt;&#39; to native encoding</code></pre>
+<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00E5&gt;&#39; to native encoding</code></pre>
 <pre class="r"><code>year_month_state_massshooting=
   gun_violence_state_df %&gt;%
   group_by(year,month,state) %&gt;% 
