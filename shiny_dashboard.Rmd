@@ -14,11 +14,12 @@ library(viridis)
 library(plotly)
 library(dplyr)
 library(rjson)
+library(shiny)
 ```
 
 ```{r}
 #read data
-gun = read_csv("./mass shootings(all years).csv") %>% 
+gun = read_csv("./data/gun violence/mass shootings(all years).csv") %>% 
   janitor::clean_names() %>% 
   separate(incident_date, c("date", "month", "year"), sep = "-" ) %>% 
   mutate(year = as.numeric(year) + 2000) %>% 
@@ -114,6 +115,4 @@ Column {.sidebar}
 
 Column {.tabset}
 -----------------------------------------------------------------------
-
-
 

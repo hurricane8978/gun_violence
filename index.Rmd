@@ -28,23 +28,8 @@ Jie Liu, Xiaoluo Jiao, Ziqian He, Yu Si, Xinyuan Liu, Tianchuan Gao
 
 </center>
 
+<img src="gun_violence_covid.jpg" style="width:100%">
+<font size = "3">*Police work a crime scene in Chicago on Nov. 19, 2019. Despite a statewide shelter-in-place order in an attempt to stop the spread of the coronavirus, the city is still facing high levels of gun violence. *</font>
 
+</center>
 
-## Project motivation
-
-
-
-&nbsp;
-
-## Data
-
-
-
-&nbsp;
-
-## Method
-
-
-
-&nbsp;
-&nbsp;

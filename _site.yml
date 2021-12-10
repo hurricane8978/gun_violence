@@ -4,13 +4,15 @@ navbar:
   title: "Home"
   right:
     - text: "About"
-      href: 
+      href: About.html
     - text: "Exploratory Analyses"
       href: 
     - text: "Time Series Analysis Model"
       href: time_series_analysis.html       
     - text: "Regression Model"
-      href:      
+      href:   
+    - text: "Shiny"
+      href: shiny_dashboard.html 
     - icon: fa-envelope fa-lg
       href: 
     - icon: fa-youtube fa-lg
