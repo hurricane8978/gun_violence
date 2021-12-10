@@ -164,7 +164,7 @@ year_state_massshooting %>%
 
 year_state_massshooting %>% 
   filter(state%in%c("Illinois","California","Texas","Florida","Pennsylvania","Louisiana","New York","Ohio")) %>% 
-  ggplot(aes(x=year,y=number_mass_shooting,fill=state)) + geom_col(size=1.3) +  facet_grid(~fct_reorder(state,number_mass_shooting))+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1)) + labs(title="Mass shooting in top 8 states from 2018 to 2021",caption="Source:www.gunviolencearchive.org",tag="D") + theme(plot.background = element_rect(colour = "lightblue", size = 3, linetype = 1, 
+  ggplot(aes(x=year,y=number_mass_shooting,fill=state)) + geom_col(size=1.3) +  facet_grid(~fct_reorder(state,number_mass_shooting))+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1)) + labs(title="Mass shooting in top 8 states from 2018 to 2021",caption="Source:www.gunviolencearchive.org") + theme(plot.background = element_rect(colour = "lightblue", size = 3, linetype = 1, 
   fill = "white"), plot.title = element_text(colour = "black", face = "bold", 
   size = 14, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches"),axis.text=element_text(colour="black",size=10))
 
