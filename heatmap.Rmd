@@ -21,6 +21,10 @@ year_to_date_df = read_csv("./data/NYPD_Shooting_Incident_Data__Year_To_Date_.cs
 df = bind_rows(historic_NYPD_df,year_to_date_df)
 ```
 
+
+### The change of crime frequency  
+It’s possible that the crime drequency will have changed during the pandemic. We therefore explored whether the crime by time of day changed pre-pandemic versus during the pandemic.\
+To accomplish this, we created a heat map of gun crime frequency by time of day pre (from 2018 to 2019) and during COVID (from 2020 to 2021).
 ```{r, warning=FALSE}
 
 df_period_before = df %>%
@@ -60,8 +64,14 @@ layout(df_period, title = "Crime frequency during a day",
 
 ggsave("heatmap of hours.png")
 ```
+*Comments:* \
+Based on the heat map,  it is easier to obtain that gun crime events most happened in the afternoon and evening. Since people are more convenient to commit a crime after dark.\
+We can also that gun crime events most happened in the afternoon and evening. Since people are more convenient to commit a crime after dark. As seen in this plot, there begin  to commit a crime in the afternoon rush hour times of 3-6 PM during COVID as compared to pre-COVID. In addition, there was more gun crimes during COVID.
 
 
+
+### Location of gun crime 
+This map displays the geolocation of gun crime in New York City from 2018 to 2019. The data are interactive and organized by borough.
 ```{r, warning=FALSE}
 data_pre = 
   df %>% 
@@ -98,7 +108,7 @@ data_pre %>%
 
 ```
 
-
+This map displays the geolocation of gun crime in New York City from 2020 to 2021. The data are interactive and organized by borough.
 ```{r, warning=FALSE}
 data_during = 
   df %>% 
@@ -130,22 +140,10 @@ data_during %>%
  setView(-73.8399986, 40.746739, zoom = 10.5)
 ```
 
-```{r, warning=FALSE}
-unemploy = 
-  read_csv("./data/Unemployment.csv") %>% 
-  separate(label, into = c("year", "month")) %>% 
-  filter(year != "2017")
- 
-unemploy = dplyr::rename(unemploy, state = series_id)
+#### Year to Year Comparison
 
-gun_violence = 
-  read_csv("./data/year_month_state_massshooting.csv") %>% 
-  mutate(year = year + 2000) %>% 
-  mutate(year = as.character(year))
+There appear to some incremental changes in the geolocation of gun crime from 2018 to 2021, including an increase in clustering in the all the region during covid period(2020-2021), relative to pre covid(2018-2019). Further, more gun crime happened during the covid in all neighborhoods of newyork city.\
 
-new_dataframe = 
-  right_join(unemploy, gun_violence, by = c("state" = "state", "year" = "year", "month" = "month")) %>% 
-  mutate(period = str_remove(period, "[M]"),
-         period = as.numeric(period))
+#### Neighborhood Clustering
 
-```
+There is a rapid increase of gun crime in Bronx and Queens during covid. 
