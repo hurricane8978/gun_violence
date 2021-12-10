@@ -1,7 +1,28 @@
 ---
 title: "Will a shooting incident become a murder?--a logistic regression approach"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
+```{css, echo=FALSE}
+pre {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
+```{css, echo=FALSE}
+.scroll-200 {
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -53,29 +74,32 @@ df=df[df$VIC_AGE_GROUP != "UNKNOWN", ]
 
 ## Model Selection
 First, build the initial logistic regression model with all variables
-```{r}
+```{r,class.output="scroll-200"}
 fit = glm(STATISTICAL_MURDER_FLAG ~ BORO+PERP_AGE_GROUP+PERP_SEX+PERP_RACE+VIC_AGE_GROUP+VIC_SEX+VIC_RACE+time_period+month,data=df,family = binomial())
 summary(fit)
 ```
 we can see from the above result that some variables do not pass the significance test. Now, we can use the stepwise method to choose variables.
 
-```{r}
+```{r,,class.output="scroll-200"}
 step(fit)
 ```
+
 Now, we test the reduced model from the above result
-```{r}
+```{r,,class.output="scroll-200"}
 fit_2 = glm(formula = STATISTICAL_MURDER_FLAG ~ BORO + PERP_AGE_GROUP + 
     PERP_RACE + VIC_AGE_GROUP + VIC_RACE + time_period, family = binomial(), 
     data = df)
 summary(fit_2)
 ```
-We can see that PERP_RACE and PERP_RACE still not pass the significance test, now drop these two and run again
-```{r}
+
+We can see that PERP_RACE and VIC_RACE still not pass the significance test, now drop these two and run again
+```{r,,class.output="scroll-200"}
 fit_3 = glm(formula = STATISTICAL_MURDER_FLAG ~ BORO + PERP_AGE_GROUP + 
               VIC_AGE_GROUP +  time_period, family = binomial(), 
     data = df)
 summary(fit_3)
 ```
+
 From the above result, we use dummy variables for BOROQUEENS,BOROSTATEN ISLAND,PERP_AGE_GROUP18-24
 ```{r}
 df$QUEENS = ifelse(df$BORO=="QUEENS",1,0)
@@ -89,20 +113,22 @@ df$PERP_65 =ifelse(df$PERP_AGE_GROUP=="65+",1,0)
 ```
 
 Run logistic regression with these dummy variables again and use stepwise method to filter.
-```{r}
+```{r,,class.output="scroll-200"}
 fit_4 = glm(formula = STATISTICAL_MURDER_FLAG ~ QUEENS + STATEN + BROOKLYN + MANHATTAN + PERP_18 + PERP_25 + PERP_45 + PERP_65 + 
               VIC_AGE_GROUP +  time_period, family = binomial(), 
     data = df)
 summary(fit_4)
 step(fit_4)
 ```
+
 now,we can run the model for the last time
-```{r}
+```{r,,class.output="scroll-200"}
 fit_5 = glm(formula = STATISTICAL_MURDER_FLAG ~ BROOKLYN + MANHATTAN + 
     PERP_25 + PERP_45 + PERP_65 + VIC_AGE_GROUP + time_period, 
     family = binomial(), data = df)
 summary(fit_5)
 ```
+
 This model seems ok with all variables having significance. Now we test for the accuracy 
 ```{r}
 ifMudrer = function(glm.model, threshold = 0.5) {
