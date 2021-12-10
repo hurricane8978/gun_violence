@@ -4,7 +4,7 @@ navbar:
   title: "Home"
   right:
     - text: "About"
-      href: 
+      href: About.html
     - text: "Exploratory Analyses"
       href: 
     - text: "Time Series Analysis Model"
