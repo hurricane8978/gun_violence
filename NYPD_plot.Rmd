@@ -25,10 +25,10 @@ scale_fill_discrete = scale_fill_viridis_d
 ## Data Import
 
 ```{r cars}
-historic_NYPD_df = read_csv("./NYPD_Shooting_Incident_Data__Historic_.csv") %>%
+historic_NYPD_df = read_csv("data/NYPD_Shooting_Incident_Data__Historic_.csv") %>%
   separate('OCCUR_DATE', into=c("month","day","year"),sep = "/") %>%
   filter(year>=2018)
-year_to_date_df = read_csv("./NYPD_Shooting_Incident_Data__Year_To_Date_.csv")%>%
+year_to_date_df = read_csv("data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")%>%
   separate('OCCUR_DATE', into=c("month","day","year"),sep = "/")
 df = bind_rows(historic_NYPD_df,year_to_date_df) %>% 
   janitor::clean_names()
@@ -60,20 +60,20 @@ this plot compares the shooting incidents in five boroughs in NYC. we set April 
 df_boro_before = df %>%
   arrange(year,month,day)%>%
   slice(1206:2205) %>%
-  group_by(BORO) %>%
+  group_by(boro) %>%
   summarise(count=n(),
             ratio=(count/1000)*100,
             time="Before COVID")
 df_boro_after = df %>%
   arrange(year,month,day)%>%
   slice(2205:4355) %>%
-  group_by(BORO) %>%
+  group_by(boro) %>%
   summarise(count=n(),
             ratio=(count/2151)*100,
             time="POST-COVID")
 df_boro=bind_rows(df_boro_before,df_boro_after)
 df_boro%>%
-  ggplot(aes(x=fct_reorder(BORO,count),y=count,fill=time))+geom_bar(stat = "identity",position = "dodge")+ 
+  ggplot(aes(x=fct_reorder(boro,count),y=count,fill=time))+geom_bar(stat = "identity",position = "dodge")+ 
   labs(x = "Different Boroughs in NYC", y = "Shooting Incidents reported", title = "Shooting Incidents Reported by NYPD From Five Boros in NYC")
 ggsave("NY_boro_comparison.png")
 
@@ -84,18 +84,18 @@ this plot cross-compared time periods and five boroughs. we define 0-6am as midn
 
 ```{r}
 df_boro_time = df %>%
-  separate(OCCUR_TIME,into = c("hour","minute","second"),sep = ":")%>%
+  separate(occur_time,into = c("hour","minute","second"),sep = ":")%>%
   mutate(hour=as.numeric(hour),
     time_period = case_when(
     hour>=0 & hour<6 ~ "MIDNIGHT",
            hour>=6 & hour<12 ~ "MORNING",
            hour>=12 & hour<18 ~ "AFTERNOON",
            hour>=18 & hour<=23 ~ "EVENING"))%>%
-  group_by(time_period,BORO) %>%
+  group_by(time_period,boro) %>%
   summarise(count=n(),
             ratio=count/1000)
 df_boro_time %>%
-  ggplot(aes(x = time_period, y = BORO, fill = count))+ geom_tile() +
+  ggplot(aes(x = time_period, y = boro, fill = count))+ geom_tile() +
   scale_fill_viridis_c(direction = -1)+
   labs(x = "Different time periods", y = "Different Boros", title = "Shooting Incidents Reported Cross-compared with Time Period and Boros")
 ggsave("cross_comparison_boro_time.png")

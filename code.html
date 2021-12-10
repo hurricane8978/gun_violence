@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Yu Si" />
 
+<meta name="date" content="2021-11-30" />
 
-<title>explorotary analysis</title>
+<title>unemploy_gun</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -246,17 +248,12 @@ $(document).ready(function () {
         
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="About.html">About</a>
-</li>
+        <li class="dropdown-header">About</li>
 <li class="dropdown-header">Exploratory Analyses</li>
 <li>
   <a href="time_series_analysis.html">Time Series Analysis Model</a>
 </li>
 <li class="dropdown-header">Regression Model</li>
-<li>
-  <a href="https://gun-violence-p8105.shinyapps.io/shiny/">Shiny</a>
-</li>
 <li>
   <a>
     <span class="fa fa-envelope fa-lg"></span>
@@ -284,34 +281,162 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">explorotary analysis</h1>
+<h1 class="title toc-ignore">unemploy_gun</h1>
+<h4 class="author">Yu Si</h4>
+<h4 class="date">11/30/2021</h4>
 
 </div>
 
 
-<pre><code>## Warning in FUN(X[[i]], ...): strings not representable in native encoding will
-## be translated to UTF-8</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00C4&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00D6&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00E4&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00F6&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00DF&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00C6&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00E6&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00D8&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00F8&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00C5&gt;&#39; to native encoding</code></pre>
-<pre><code>## Warning in FUN(X[[i]], ...): unable to translate &#39;&lt;U+00E5&gt;&#39; to native encoding</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
-<p>The plot above shows a fluctutation in national mass shooting number in US from January 2018 to October 2021. From the plot, we can reach two conclusions.First, there is a seasonal pattern in national mass shooting that in every year, basically, number of mass shooting will begin to increase from January and reach its peak in summer and then reduce to bottom. Second, 2020 saw a huge increase in mass shootings compared with previous years, and 2021 is trending a little lower. After data processing in R, there is nationally mass shootings jumped nearly 50% during a pandemic with crippling unemployment, violent protests and idle youth.</p>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
-<p>We arrange 48 states in an ascending way according to the number of mass shooting from 2018 to 2021. As shown in the bar chart, top 8 states are Illinois, California, Texas, Florida, Pennsylvania, Louisiana, New York and Ohio respectively. As one of city in Illinois, Chicago Leads the nation in mass shootings, averaging about one per week.</p>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
-<p>this is a plot showing the number of shooting incidents in NYC from January 2018 to January 2021 in months. we can see a big increase in April 2020 which match the time when COVID-19 outbreak happened in NYC. We assume the COVID-19 outbreak caused the increase of unemployment which leads to a big increase in shooting incidents.</p>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
-<p>this plot compares the shooting incidents in five boroughs in NYC. we set April 2020 as the outbreak time and before covid means 365 days before April 2020 and post covid means 365 days after April 2020. we can see from the plot that Broolyn has the most shooting incidents and Staten Island has the least. we can the after covid, all boroughs increases in shooting incidents numbers while the order remains the same.</p>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
-<p>This plot cross-compared time periods and five boroughs in New York City. We divide a day into four parts: 0 - 6 am is midnight, 6 - 12 am is morning, 12 - 18 pm is afternoon and 6 - 12 pm is evening. the darker the block is ,the more shooting incidents happen in this boroughs at this period of a day. As shown in the plot, we can find that Staten Island is the safest borough in which there are very few shooting incidents occurred here. According to a news report, Staten Islanders are roughly three times more likely to own legal handguns than Brooklyn residents, and about four times more likely to own legal handguns than people in Manhattan and the Bronx. This could be one reason for explaining the higher safety of this borough that more people own a gun, more likely criminals need to bear a risk of death, which deter potential criminals and keep the community’s safe. In terms of time, evening and midnight are more dangerous and in term of borough Bronx and Brooklyn have most shooting incidents.</p>
+<pre class="r"><code>library(readr)
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.5     ✓ dplyr   1.0.7
+## ✓ tibble  3.1.4     ✓ stringr 1.4.0
+## ✓ tidyr   1.1.3     ✓ forcats 0.5.1
+## ✓ purrr   0.3.4</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(ggalt)</code></pre>
+<pre><code>## Registered S3 methods overwritten by &#39;ggalt&#39;:
+##   method                  from   
+##   grid.draw.absoluteGrob  ggplot2
+##   grobHeight.absoluteGrob ggplot2
+##   grobWidth.absoluteGrob  ggplot2
+##   grobX.absoluteGrob      ggplot2
+##   grobY.absoluteGrob      ggplot2</code></pre>
+<pre class="r"><code>library(ggforce)
+library(plotly)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plotly&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     last_plot</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre><code>## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     layout</code></pre>
+<pre class="r"><code>library(ggpubr)</code></pre>
+<pre class="r"><code>unemploy_gun &lt;- read_csv(&quot;data/unemployment_gun.csv&quot;)</code></pre>
+<pre><code>## New names:
+## * `` -&gt; ...1</code></pre>
+<pre><code>## Rows: 911 Columns: 7</code></pre>
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (3): state, month, time
+## dbl (4): ...1, value, year, number_mass_shooting</code></pre>
+<pre><code>## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>UNRATE &lt;- read_csv(&quot;data/unemployment rate/UNRATE.csv&quot;)</code></pre>
+<pre><code>## Rows: 47 Columns: 2</code></pre>
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl  (1): UNRATE
+## date (1): DATE</code></pre>
+<pre><code>## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>unemploy_gun_IL = unemploy_gun %&gt;% 
+  filter(state == c(&quot;Illinois&quot;)) %&gt;%
+  mutate(time=fct_inorder(time)) %&gt;% 
+  arrange(time) 
+
+plot_1 = unemploy_gun_IL %&gt;% 
+  ggplot(mapping = aes(x = time , y = value, group= 1)) + 
+  geom_line()+theme(axis.text.x = element_text(angle = 90)) +
+  ylab(&quot;Unemployment Rate&quot;)+
+  labs(title = &quot; Unemployment Rate vs Number of \n Mass Shooting in Illinois&quot;)+
+  theme( plot.title = element_text(colour = &quot;black&quot;, face = &quot;bold&quot;, 
+  size = 13, vjust = 3, hjust = 0.5))
+
+
+plot_2 = unemploy_gun_IL %&gt;%
+  ggplot(mapping = aes(x = time , y = number_mass_shooting, group= 1)) + 
+  geom_line()+theme(axis.text.x = element_text(angle = 90)) +
+  ylab(&quot;Number_mass_shooting&quot;)
+
+
+
+
+figure &lt;- ggarrange(plot_1, plot_2,
+                    ncol = 1, nrow = 2)
+
+figure</code></pre>
+<p><img src="code_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>plot_us = UNRATE %&gt;% 
+  ggplot(mapping = aes(x = DATE , y = UNRATE, group= 1)) + theme_bw()+
+  geom_line() +
+  ylab(&quot;Unemployment Rate&quot;)+
+  xlab(&quot;Time&quot;)+
+  labs(title = &quot; Unemployment Rate in US&quot;)+
+  theme( plot.title = element_text(colour = &quot;black&quot;, face = &quot;bold&quot;, 
+  size = 13, vjust = 3, hjust = 0.5))
+
+plot_us</code></pre>
+<p><img src="code_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<pre class="r"><code># 
+# 
+# ggplot(mpg, aes(displ, hwy)) +
+#   geom_point() +
+#   scale_y_continuous(
+#    &quot;mpg (US)&quot;,
+#     sec.axis = sec_axis(~ . * 1.20, name =&quot;mpg (UK)&quot;)
+#   )
+# ggplot()
+# unemploy_final = 
+#   unemploy_state %&gt;% 
+#   filter(year!=2017)%&gt;% 
+#   mutate(month=str_replace(month,&quot; &quot;,&quot;&quot;))
+# 
+# 
+# year_month_state_massshooting &lt;- read_csv(&quot;data/year_month_state_massshooting.csv&quot;) %&gt;% 
+#   select(-...1) %&gt;% 
+#   mutate(year = year + 2000) 
+# 
+# 
+# unemploy_gun = left_join(year_month_state_massshooting,unemploy_final, by = c(&quot;month&quot; = &quot;month&quot;, &quot;state&quot;= &quot;state&quot;, &quot;year&quot; = &quot;year&quot;) ) %&gt;% 
+#   drop_na()
+# write.csv(unemploy_gun, &quot;data/unemploy_gun.csv&quot;)
+# 
+# unemploy_gun_IL = unemploy_gun %&gt;% 
+#   filter(state == c(&quot;Illinois&quot;)
+# 
+# unemploy_gun_FIVE = unemploy_gun %&gt;% 
+#   filter(state == c(&quot;Illinois&quot;, &quot;New York&quot;, &quot;California&quot;, &quot;Texas&quot;, &quot;Ohio&quot;, &quot;Pennsylvania&quot;))
+#                   
+# unemploy_gun_NY = unemploy_gun %&gt;% 
+#   filter(state == &quot;New York&quot;)
+# 
+# unemploy_gun_FIVE %&gt;%
+#   ggplot(aes(x = value, y = number_mass_shooting)) + 
+#   geom_point(aes(color = state), alpha = .5)+
+#   theme(legend.position = &quot;bottom&quot;)
+# 
+# ggplot(unemploy_gun_IL, aes(x = value, y = number_mass_shooting)) + 
+#   geom_point(aes(color = state), alpha = .5)+
+#   theme(legend.position = &quot;bottom&quot;)
+# lm(number_mass_shooting~value,unemploy_gun_IL)
+# 
+# ggplot(unemploy_gun_NY, aes(x = value, y = number_mass_shooting)) + 
+#   geom_point(aes(color = state), alpha = .5)+
+#   geom_smooth(method = &quot;lm&quot;, se = FALSE)+
+#   theme(legend.position = &quot;bottom&quot;)
+# lm(number_mass_shooting~value,unemploy_gun_NY)
+# 
+# ggplot(unemploy_gun_NY, aes(x = value, y = number_mass_shooting)) + 
+#   geom_point(aes(color = state), alpha = .5)+
+#   geom_abline()+
+#   theme(legend.position = &quot;bottom&quot;)
+# lm(number_mass_shooting~value,unemploy_gun_NY)
+# 
+# ggplot(unemploy_gun, aes(x = value, y = number_mass_shooting)) + 
+#   geom_point(aes(color = state), alpha = .5)+
+#   theme(legend.position = &quot;bottom&quot;)</code></pre>
 
 
 
