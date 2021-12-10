@@ -6,7 +6,7 @@ navbar:
     - text: "About"
       href: About.html
     - text: "Exploratory Analyses"
-      href: 
+      href: exploratory-analysis.html
     - text: "Time Series Analysis Model"
       href: time_series_analysis.html       
     - text: "Regression Model"
