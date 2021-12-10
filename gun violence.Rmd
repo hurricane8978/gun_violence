@@ -43,7 +43,8 @@ read_csv("data/gun violence/mass shootings(all years).csv") %>%
   mutate(number_year_killed=sum(number_killed),number_year_injured=sum(number_injured),year=as.numeric(year)) %>% 
   ungroup() %>% 
   filter(year!="17") %>% 
-  mutate(year=year+2000) 
+  mutate(year=year+2000) %>% 
+  select(-city_or_county)
 
 
 
