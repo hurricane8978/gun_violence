@@ -4,13 +4,13 @@ navbar:
   title: "Home"
   right:
     - text: "About"
-      href: about.html
+      href: 
     - text: "Exploratory Analyses"
-      href: plotly.html
+      href: 
     - text: "Time Series Analysis Model"
       href: time_series_analysis.html       
     - text: "Regression Model"
-      href: time_series_analysis.html      
+      href:      
     - icon: fa-envelope fa-lg
       href: 
     - icon: fa-youtube fa-lg

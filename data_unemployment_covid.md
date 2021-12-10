@@ -5,70 +5,23 @@ Xinyuan Liu
 
 ``` r
 library(tidyverse)
-```
-
-    ## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
-
-    ## v ggplot2 3.3.5     v purrr   0.3.4
-    ## v tibble  3.1.4     v dplyr   1.0.7
-    ## v tidyr   1.1.3     v stringr 1.4.0
-    ## v readr   2.0.1     v forcats 0.5.1
-
-    ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
-
-``` r
 library(rvest)
-```
-
-    ## 
-    ## Attaching package: 'rvest'
-
-    ## The following object is masked from 'package:readr':
-    ## 
-    ##     guess_encoding
-
-``` r
 library(httr)
 library(readxl)
 library(plyr)
-```
-
-    ## ------------------------------------------------------------------------------
-
-    ## You have loaded plyr after dplyr - this is likely to cause problems.
-    ## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
-    ## library(plyr); library(dplyr)
-
-    ## ------------------------------------------------------------------------------
-
-    ## 
-    ## Attaching package: 'plyr'
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     arrange, count, desc, failwith, id, mutate, rename, summarise,
-    ##     summarize
-
-    ## The following object is masked from 'package:purrr':
-    ## 
-    ##     compact
-
-``` r
 unemploy = read_csv("data_unemployment.csv")
 ```
 
     ## Rows: 2900 Columns: 5
 
-    ## -- Column specification --------------------------------------------------------
+    ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (3): Series ID, Period, Label
     ## dbl (2): Year, Value
 
     ## 
-    ## i Use `spec()` to retrieve the full column specification for this data.
-    ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
 ``` r
 clean_unemploy = 
@@ -123,8 +76,18 @@ clean_unemploy =
   mutate(series_id = replace(series_id, series_id == "LASST530000000000003", "Washington")) %>% 
   mutate(series_id = replace(series_id, series_id == "LASST540000000000003", "West Virginia")) %>% 
   mutate(series_id = replace(series_id, series_id == "LASST550000000000003", "Wisconsin")) %>% 
-  mutate(series_id = replace(series_id, series_id == "LASST560000000000003", "Wyoming"))
+  mutate(series_id = replace(series_id, series_id == "LASST560000000000003", "Wyoming")) 
 ```
+
+``` r
+library(plotly)
+clean_unemploy =  dplyr::rename(clean_unemploy, state = series_id) 
+clean_unemploy %>%
+  mutate(label = fct_inorder(label)) %>% 
+  plot_ly(x = ~label, y = ~value, color = ~state, type = "scatter", mode = "lines", colors = "viridis")
+```
+
+![](data_unemployment_covid_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ``` r
 covid = GET("https://data.cdc.gov/resource/9mfq-cb36.csv", query = list("$limit" = 50000)) %>% content("parsed")
