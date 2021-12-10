@@ -30,7 +30,8 @@ historic_NYPD_df = read_csv("./NYPD_Shooting_Incident_Data__Historic_.csv") %>%
   filter(year>=2018)
 year_to_date_df = read_csv("./NYPD_Shooting_Incident_Data__Year_To_Date_.csv")%>%
   separate('OCCUR_DATE', into=c("month","day","year"),sep = "/")
-df = bind_rows(historic_NYPD_df,year_to_date_df)
+df = bind_rows(historic_NYPD_df,year_to_date_df) %>% 
+  janitor::clean_names()
 ```
 
 ## Change through date in month

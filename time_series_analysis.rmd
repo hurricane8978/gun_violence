@@ -16,7 +16,7 @@ library(tseries)
 
 
 unemploy = 
-  read_csv("Unemployment.csv") %>% 
+  read_csv("data/Unemployment_renamed.csv") %>% 
   separate(label, into = c("year", "month")) %>%
   dplyr::filter(year != 2017)
 
@@ -56,7 +56,7 @@ Then, we  did a box-cox transformation to make the variance equal. Because the l
 ```{r warning=FALSE}
 lambda <- BoxCox.lambda(month.ts)
 d1 = sqrt(month.ts)
-BoxCox.lambda(d1)
+##BoxCox.lambda(d1)
 ```
 
 After that, we need to stationarize the series. Here, we used Augmented Dickey-Fuller Test to see if the series is stationary. The p-value is less than 0.01 which means our series is already stationary and don't need any further transformation.
