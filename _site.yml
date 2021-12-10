@@ -12,7 +12,7 @@ navbar:
     - text: "Regression Model"
       href:   
     - text: "Shiny"
-      href: shiny_dashboard.html 
+      href: https://gun-violence-p8105.shinyapps.io/shiny/ 
     - icon: fa-envelope fa-lg
       href: 
     - icon: fa-youtube fa-lg
