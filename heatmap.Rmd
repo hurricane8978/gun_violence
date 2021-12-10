@@ -1,7 +1,5 @@
 ---
 title: "heatmap"
-author: "ZiqianHe"
-date: "2021/12/6"
 output: html_document
 ---
 
@@ -15,10 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, warning=FALSE}
-historic_NYPD_df = read_csv("./NYPD_Shooting_Incident_Data__Historic_.csv") %>%
+historic_NYPD_df = read_csv("./data/NYPD_Shooting_Incident_Data__Historic_.csv") %>%
   separate('OCCUR_DATE', into=c("month","day","year"),sep = "/") %>%
   filter(year>=2018)
-year_to_date_df = read_csv("./NYPD_Shooting_Incident_Data__Year_To_Date_.csv")%>%
+year_to_date_df = read_csv("./data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")%>%
   separate('OCCUR_DATE', into=c("month","day","year"),sep = "/")
 df = bind_rows(historic_NYPD_df,year_to_date_df)
 ```
@@ -55,7 +53,7 @@ layout(df_period, title = "Crime frequency during a day",
        yaxis = list(title = ' '), 
        width = 850, height = 400,
        annotations = 
- list(x = 1.2, y = -0.15, text = "Source: https://opendata.cityofnewyork.us", 
+ list(x = 1.15, y = -0.15, text = "Source: https://opendata.cityofnewyork.us", 
       showarrow = F, xref='paper', yref='paper', 
       xanchor='right', yanchor='auto', xshift=0, yshift=0,
       font=list(colour = "Cylinders",tag = "A")))
@@ -134,14 +132,14 @@ data_during %>%
 
 ```{r, warning=FALSE}
 unemploy = 
-  read_csv("Unemployment.csv") %>% 
+  read_csv("./data/Unemployment.csv") %>% 
   separate(label, into = c("year", "month")) %>% 
   filter(year != "2017")
  
 unemploy = dplyr::rename(unemploy, state = series_id)
 
 gun_violence = 
-  read_csv("data/year_month_state_massshooting.csv") %>% 
+  read_csv("./data/year_month_state_massshooting.csv") %>% 
   mutate(year = year + 2000) %>% 
   mutate(year = as.character(year))
 
