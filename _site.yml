@@ -6,15 +6,11 @@ navbar:
     - text: "About"
       href: About.html
     - text: "Exploratory Analyses"
-      menu:
-      - text: "National Visualization Analysis"
-        href: National-visualization-analysis.html
-      - text: "NY Visualization Analysis"
-        href: NY-visualization-analysis.html
+      href: exploratory-analysis.html
     - text: "Time Series Analysis Model"
       href: time_series_analysis.html       
     - text: "Regression Model"
-      href: 
+      href:   
     - text: "Shiny"
       href: https://gun-violence-p8105.shinyapps.io/shiny/ 
     - icon: fa-envelope fa-lg
