@@ -326,12 +326,19 @@ div.tocify {
         
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown-header">About</li>
-<li class="dropdown-header">Exploratory Analyses</li>
+        <li>
+  <a href="About.html">About</a>
+</li>
+<li>
+  <a href="exploratory-analysis.html">Exploratory Analyses</a>
+</li>
 <li>
   <a href="time_series_analysis.html">Time Series Analysis Model</a>
 </li>
 <li class="dropdown-header">Regression Model</li>
+<li>
+  <a href="https://gun-violence-p8105.shinyapps.io/shiny/">Shiny</a>
+</li>
 <li>
   <a>
     <span class="fa fa-envelope fa-lg"></span>
@@ -434,12 +441,12 @@ acf(d1)
 pacf(d1)</code></pre>
 <p><img src="time_series_analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="r"><code>##pacf(d1, plot = F)</code></pre>
-<p>We could observe a sharp cut off at lag 1 in our PACF graph, and a gradual decrease in ACF plot, but the spikes become significant at lag 11-13. To figure out which ARIMA model to use, we decide to use the function auto.arima. It tells us that we should use ARIMA(0,0,1)(1,1,0)[12].</p>
+<p>We could observe a sharp cut off at lag 1 in our PACF graph, and a gradual decrease in ACF plot, but the spikes become significant again at lag 11-13, which could mean that there is some additional seasonality we need to include in our model. To figure out which ARIMA model to use, we decide to use the function auto.arima, and it tells us that we should use ARIMA(0,0,1)(1,1,0)[12].</p>
 <pre class="r"><code>fit_auto = auto.arima(d1)</code></pre>
 </div>
 <div id="residual-check" class="section level2">
 <h2>Residual check</h2>
-<p>After that, we checked the residual and the Ljung-box test results showed that the p-value is greater than 0.05, which means the residuals are white noise and follows normal distribution. Thus, we could conclude that our model is valid.</p>
+<p>After that, we checked the residual and the Ljung-box test results showed that the p-value is greater than 0.05, which means the residuals are white noise and from the graph below, we can observe that the residuals follow normal distribution. Thus, we could conclude that our model is valid.</p>
 <pre class="r"><code>checkresiduals(auto.arima(d1))## Residuals are white noise</code></pre>
 <p><img src="time_series_analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
