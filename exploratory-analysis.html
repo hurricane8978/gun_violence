@@ -289,64 +289,16 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>gun_violence_state_df=
-read_csv(&quot;data/gun violence/mass shootings(all years).csv&quot;) %&gt;% 
-  janitor::clean_names() %&gt;% 
-  select(-incident_id,-address,-operations) %&gt;%
-  separate(incident_date,into=c(&quot;day&quot;,&quot;month&quot;,&quot;year&quot;),sep=&quot;-&quot;) %&gt;% 
-  group_by(state,year) %&gt;%
-  mutate(number_year_killed=sum(number_killed),number_year_injured=sum(number_injured),year=as.numeric(year)) %&gt;% 
-  ungroup() %&gt;% 
-  filter(year!=&quot;17&quot;) %&gt;% 
-  mutate(year=year+2000) %&gt;% 
-  select(-city_or_county)</code></pre>
-<pre><code>## Rows: 2000 Columns: 8</code></pre>
-<pre><code>## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (5): Incident Date, State, City Or County, Address, Operations
-## dbl (3): Incident ID, # Killed, # Injured</code></pre>
-<pre><code>## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>year_month_state_massshooting=
-  gun_violence_state_df %&gt;%
-  group_by(year,month,state) %&gt;% 
-  mutate(number_mass_shooting=n()) %&gt;% 
-  group_by(year,month,state,number_mass_shooting) %&gt;% 
-  summarise() %&gt;% 
-  mutate(year_month=str_c(year,month,sep=&quot;&quot;)) %&gt;% 
-  mutate(month=match(month,month.abb)) %&gt;% 
-  group_by(year) %&gt;% 
-  arrange(month) %&gt;% 
-  filter(year_month!=&quot;2021Nov&quot;)</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;year&#39;, &#39;month&#39;, &#39;state&#39;. You can override using the `.groups` argument.</code></pre>
-<pre class="r"><code>year_month_state_massshooting %&gt;% 
-  mutate(year_month=fct_inorder(year_month)) %&gt;% 
-  group_by(year_month) %&gt;% 
-  count() %&gt;% 
-  rename(number_mass_shooting=n) %&gt;% 
-  ggplot(aes(year_month,number_mass_shooting)) + theme_bw(base_size=15 ) +
-  geom_xspline(aes(group=1),color=&quot;lightblue&quot;,size=0.7) + geom_point(color=&quot;lightblue&quot;,size=1.5) +
-  geom_segment(aes(x = 25, y = 10, xend = 25, yend = 29) ,size=1.3,colour = &quot;lightblue&quot;,linetype=&quot;dashed&quot;) + 
-  geom_text(aes(x=25, y= 30, label = &quot;first case of death in US &quot; ), colour = &quot;red&quot;, vjust = -2, hjust = 0.5, size = 3)  + 
-  labs(x = &quot;Month Year &quot;, y = &quot;Mass Shooting&quot;, title = &quot;National mass shooting in US &quot;,caption=&quot;(Source:www.gunviolencearchive.org)&quot;) + theme( plot.title = element_text(colour = &quot;black&quot;, face = &quot;bold&quot;, 
-    size = 20, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), &quot;inches&quot;),axis.text=element_text(colour=&quot;black&quot;,size=8),axis.title=element_text(size=10)) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1),plot.caption = element_text(size=7)) </code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-2-1.png" width="100%" /></p>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
 <p>The plot above shows a fluctutation in national mass shooting number in US from January 2018 to October 2021. From the plot, we can reach two conclusions.First, there is a seasonal pattern in national mass shooting that in every year, basically, number of mass shooting will begin to increase from January and reach its peak in summer and then reduce to bottom. Second, 2020 saw a huge increase in mass shootings compared with previous years, and 2021 is trending a little lower. After data processing in R, there is nationally mass shootings jumped nearly 50% during a pandemic with crippling unemployment, violent protests and idle youth.</p>
-<pre class="r"><code>mass_shooting_state=
-  gun_violence_state_df %&gt;% 
-  group_by(state) %&gt;%
-  count() %&gt;% 
-  select(number_mass_shooting=n) %&gt;% 
-  arrange(number_mass_shooting) %&gt;% 
-  mutate(Number=number_mass_shooting)</code></pre>
-<pre><code>## Adding missing grouping variables: `state`</code></pre>
-<pre class="r"><code>mass_shooting_state %&gt;% 
-  ggplot(aes(x=fct_reorder(state,number_mass_shooting),y=number_mass_shooting,fill=Number)) + geom_bar(stat = &quot;identity&quot;, colour = &quot;black&quot;,position = &quot;dodge&quot;) + theme_bw( ) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1))+ labs(y= &quot;Mass Shooting&quot;, x = &quot;State&quot;,title=&quot;Top States with highest \n number of Mass Shooting&quot;,caption=&quot;(Source:www.gunviolencearchive.org)&quot;) + theme( plot.title = element_text(colour = &quot;black&quot;, face = &quot;bold&quot;, 
-  size = 15, vjust = 3, hjust = 0.5), plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), &quot;inches&quot;),axis.text=element_text(colour=&quot;black&quot;,size=3)) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust =1,size=8),axis.text.y = element_text(size=8),axis.title=element_text(size=10),plot.caption = element_text(size=7)) </code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-3-1.png" width="100%" /></p>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
 <p>We arrange 48 states in an ascending way according to the number of mass shooting from 2018 to 2021. As shown in the bar chart, top 8 states are Illinois, California, Texas, Florida, Pennsylvania, Louisiana, New York and Ohio respectively. As one of city in Illinois, Chicago Leads the nation in mass shootings, averaging about one per week.</p>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
+<p>this is a plot showing the number of shooting incidents in NYC from January 2018 to January 2021 in months. we can see a big increase in April 2020 which match the time when COVID-19 outbreak happened in NYC. We assume the COVID-19 outbreak caused the increase of unemployment which leads to a big increase in shooting incidents.</p>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<p>this plot compares the shooting incidents in five boroughs in NYC. we set April 2020 as the outbreak time and before covid means 365 days before April 2020 and post covid means 365 days after April 2020. we can see from the plot that Broolyn has the most shooting incidents and Staten Island has the least. we can the after covid, all boroughs increases in shooting incidents numbers while the order remains the same.</p>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
+<p>This plot cross-compared time periods and five boroughs in New York City. We divide a day into four parts: 0 - 6 am is midnight, 6 - 12 am is morning, 12 - 18 pm is afternoon and 6 - 12 pm is evening. the darker the block is ,the more shooting incidents happen in this boroughs at this period of a day. As shown in the plot, we can find that Staten Island is the safest borough in which there are very few shooting incidents occurred here. According to a news report, Staten Islanders are roughly three times more likely to own legal handguns than Brooklyn residents, and about four times more likely to own legal handguns than people in Manhattan and the Bronx. This could be one reason for explaining the higher safety of this borough that more people own a gun, more likely criminals need to bear a risk of death, which deter potential criminals and keep the community’s safe. In terms of time, evening and midnight are more dangerous and in term of borough Bronx and Brooklyn have most shooting incidents.</p>
 
 
 
