@@ -3,8 +3,12 @@ title: "About"
 output: html_document
 ---
 
+<center>
+<img src="photo1.png" style="width:75%" class="center">
 
-<img src="gun violence.jpg" style="width:100%">
+*Image and quote from [_UConn Today_: "Confronting Gun Violence With Scholarship"](https://today.uconn.edu/2021/03/confronting-gun-violence-with-scholarship/)*
+<div style="margin-bottom:30px;">
+</div>
 
 ## Motivation
 
