@@ -87,7 +87,7 @@ pacf(d1)
 
 ```
 
-We could observe a sharp cut off at lag 1 in our PACF graph, and a gradual decrease in ACF plot, but the spikes become significant at lag 11-13. To figure out which ARIMA model to use, we decide to use the function auto.arima. It tells us that we should use ARIMA(0,0,1)(1,1,0)[12].  
+We could observe a sharp cut off at lag 1 in our PACF graph, and a gradual decrease in ACF plot, but the spikes become significant again at lag 11-13, which could mean that there is some additional seasonality we need to include in our model. To figure out which ARIMA model to use, we decide to use the function auto.arima, and it tells us that we should use ARIMA(0,0,1)(1,1,0)[12].  
 
 ```{r arima model selection}
 fit_auto = auto.arima(d1)
@@ -95,7 +95,7 @@ fit_auto = auto.arima(d1)
 
 ## Residual check
 
-After that, we checked the residual and the Ljung-box test results showed that the p-value is greater than 0.05, which means the residuals are white noise and follows normal distribution. Thus, we could conclude that our model is valid.
+After that, we checked the residual and the Ljung-box test results showed that the p-value is greater than 0.05, which means the residuals are white noise and from the graph below, we can observe that the residuals follow normal distribution. Thus, we could conclude that our model is valid.
 
 
 ```{r results='hide'}
