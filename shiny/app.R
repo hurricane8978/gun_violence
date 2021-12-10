@@ -4,6 +4,8 @@ library(shinydashboard)
 library(viridis)
 library(usmap)
 library(maps)
+library(rjson)
+library(plotly)
 
 unemploy = read_csv("Unemployment_renamed.csv") 
 clean_unemploy =  
@@ -17,11 +19,6 @@ gun = read_csv("mass shootings(all years).csv") %>%
   mutate(year = as.numeric(year) + 2000) %>% 
   filter(year != 2017)
 
-new = gun %>% 
-  group_by(state,year) %>% 
-  summarize(number = n()) 
-
-
 gun_state = gun %>%
   group_by(year, state) %>% 
   summarise(number_of_incident = n(), 
@@ -33,43 +30,51 @@ url <- 'https://eric.clst.org/assets/wiki/uploads/Stuff/gz_2010_us_040_00_20m.js
 states <- fromJSON(file=url)
 
 
-
-
-ui = navbarPage("My Application",
-    tabPanel("US map for mass shooting",
+ui = navbarPage("US Overview",
+                tabPanel("Mass Shootings Map",
+                        fillPage(
+                           tags$style(type = "text/css", "#usplot {height: calc(100vh - 80px) !important;}"),
                          sidebarPanel(
                            sliderInput(
                              "year_select", 
-                             "Select year",
-                             min = 2018, max = 2021, value = 2020)
+                             "Select year: ",
+                             min = 2018, max = 2021, value = 2020), 
+                           h6("The Mass Shootings Map allows users to toggle between different years pre- and post- Covid-19 (2018 - 2021), displaying the changes in frequency of mass shootings over time across states in the U.S. "), 
+                           h6("States with missing data are shown in blank. "),
+                           h6("The annual total numbers of killed and injured victims can be seen by hovering the cursor over specific state.")
                          ),
-                         mainPanel(plotlyOutput("usplot"))), 
-    
-    tabPanel("unemployment rate",
-               sidebarPanel(
-                 selectInput(
-                   "state_select", 
-                   "Select state",
-                   choices = state, selected = "Alabama")
-               ),
-             mainPanel(plotOutput("lineplot")))
-)
+                         mainPanel(plotlyOutput("usplot")))), 
+ 
+ 
+    tabPanel("Unemployment Rate Trends",
+             fillPage(
+               tags$style(type = "text/css", "#lineplot {height: calc(100vh - 150px) !important;}"),
+                sidebarPanel(selectizeInput(
+                   inputId = "state_select", 
+                   label = "Select or type in state(s) of interest: ", 
+                   choices = state, 
+                   selected = "New York",
+                   multiple = TRUE
+                 ), 
+                 h6("The Unemployment Rate Trends plot allows users to select states of interest, demonstrating the changes in unemployment rate over time in the U.S. from pre-covid (2017) to post-covid period (2021). "), 
+                 h6("Multiple states can be selected at the same time for comparison. ")
+                 ),
+             mainPanel(plotlyOutput("lineplot")))
+))
 
 
 server = function(input,output){
     
-    output$lineplot = renderPlot({
+    output$lineplot = renderPlotly({
     clean_unemploy %>% 
-    filter(state == input$state_select) %>% 
-    ggplot(aes(x = label, y = value, group = state)) +
-    geom_line()+
-    theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1))+
-    labs(
-      title = "Unemployment Rate by month from 2017-2021",
-      x = "Time",
-      y = "Unemployment rate"
-    )
+    filter(state %in% input$state_select) %>% 
+        plot_ly(x = ~label, y = ~value, color = ~state, type = 'scatter', mode = 'lines') %>% 
+        layout(
+          title = "Unemployment Rate by Month from 2017-2021",
+          xaxis = list(title = 'Time'),
+          yaxis = list(title = 'Unemployment rate'))
   })
+    
     
     output$usplot = renderPlotly({
     gun_state %>% 
@@ -92,12 +97,12 @@ server = function(input,output){
       ) %>% 
       layout(
         mapbox = list(
-          style="carto-positron",
-          zoom = 2,
+          style = "carto-positron",
+          zoom = 2.3,
           center = list(lon = -95.71, lat = 37.09)), 
         title = "US Map of Mass Shooting",
         legend = list(x = 100, y = 0.5)) %>%   
-      colorbar(title = "Mass Shooting")
+      colorbar(title = "# Mass Shooting")
   })
 }
 
