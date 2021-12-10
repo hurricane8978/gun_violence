@@ -1,7 +1,5 @@
 ---
-title: "join data with time series analysis"
-author: "Xinyuan Liu"
-date: "11/30/2021"
+title: "Time Series Analysis"
 output: 
   html_document:
     toc: true
@@ -58,7 +56,7 @@ Then, we  did a box-cox transformation to make the variance equal. Because the l
 ```{r warning=FALSE}
 lambda <- BoxCox.lambda(month.ts)
 d1 = sqrt(month.ts)
-## BoxCox.lambda(d1)
+BoxCox.lambda(d1)
 ```
 
 After that, we need to stationarize the series. Here, we used Augmented Dickey-Fuller Test to see if the series is stationary. The p-value is less than 0.01 which means our series is already stationary and don't need any further transformation.
@@ -115,41 +113,4 @@ d1 %>%
   autoplot(ylab = "square-rooted number of mass shooting", main = "Forecast of number of mass shooting in 2022 from ARIMA model")
 ```
 
-##2015-2019
-
-```{r}
-number_2015 = read_csv("mass shooting 2015.csv")
-number_2016 = read_csv("mass shooting 2016.csv")
-number_2017 = read_csv("mass shooting 2017.csv")
-number_1517 = 
-  bind_rows(number_2015, number_2016, number_2017) %>% 
-  janitor::clean_names() %>% 
-  select(-incident_id,-address,-operations) %>%
-  separate(incident_date,into=c("date","year"),sep=",") %>%
-  separate(date, into = c("month", "day"), sep = " (?=[^ ]+$)") %>%
-  group_by(month,year,state) %>% 
-  summarise(n_mass_shooting=n()) %>% 
-  filter(state=="Illinois") %>%
-  mutate(month=as_factor(month)) %>% 
-  mutate(month=factor(month.name[month],levels=month.name)) 
-
-  
-  
-  add_df=
-  tibble(month=c("January","April","October"),
-         year=c("2015","2015","2017"),
-         state=c("Illinois","Illinois","Illinois"), 
-         n_mass_shooting=c(0,0,0)) %>%  
-    mutate(month=factor(month))
-    
-new_df=
-    bind_rows(number_1517,add_df) %>% 
-    mutate(month=factor(month.name[month],levels=month.name),year=as.numeric(year)) %>% 
-    group_by(year,month) %>% 
-    arrange(year,month)
-
-
-
-  
-```
 
