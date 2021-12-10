@@ -1,11 +1,9 @@
 library(shiny)
 library(tidyverse)
-library(flexdashboard)
-library(viridis)
-library(plotly)
-library(dplyr)
-library(rjson)
 library(shinydashboard)
+library(viridis)
+library(usmap)
+library(maps)
 
 unemploy = read_csv("Unemployment_renamed.csv") 
 clean_unemploy =  
@@ -13,18 +11,37 @@ clean_unemploy =
   mutate(label = fct_inorder(label))
 state = clean_unemploy %>% distinct(state) %>% pull()
 
-ui = fluidPage(
-  titlePanel(title = "dashboard"),
-  sidebarPanel(
-    selectInput(
-      "state_select", 
-      "Select state",
-      choices = state, selected = "Alabama")
-  ),
-  mainPanel(
-   plotOutput("lineplot")
-  )
+gun = read_csv("mass shootings(all years).csv") %>% 
+  janitor::clean_names() %>% 
+  separate(incident_date, c("date", "month", "year"), sep = "-" ) %>% 
+  mutate(year = as.numeric(year) + 2000) %>% 
+  filter(year != 2017)
+
+new = gun %>% 
+  group_by(state,year) %>% 
+  summarize(number = n()) 
+
+ui = navbarPage("My Application",
+    tabPanel("unemployment rate",
+               sidebarPanel(
+                 selectInput(
+                   "state_select", 
+                   "Select state",
+                   choices = state, selected = "Alabama")
+               ),
+             mainPanel(plotOutput("lineplot"))
+                                   ),
+    tabPanel("US map for mass shooting",
+                sidebarPanel(
+                  sliderInput(
+                    "year_select", 
+                    "Select year",
+                    min = 2018, max = 2021, value = 2020)
+                ),
+             mainPanel(plotOutput("usplot"))),
+                          tabPanel("Component 3")
 )
+
 
 server = function(input,output){
     
@@ -40,6 +57,17 @@ server = function(input,output){
       y = "Unemployment rate"
     )
   })
+    
+    output$usplot = renderPlot({
+      new %>% 
+        filter(year == input$year_select) %>% 
+        plot_usmap(data = ., values = "number") +
+        labs(fill = 'number of mass shooting') + 
+        scale_fill_gradientn(colours=rev(heat.colors(20)), na.value = 0,guide = guide_colourbar(barwidth = 0.5, barheight = 10)) +
+        theme(legend.position = "right")
+      
+                                                     
+    })
 }
 
 shinyApp(ui, server)
