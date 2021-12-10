@@ -14,6 +14,7 @@ library(viridis)
 library(plotly)
 library(dplyr)
 library(rjson)
+library(shiny)
 ```
 
 ```{r}
@@ -114,9 +115,4 @@ Column {.sidebar}
 
 Column {.tabset}
 -----------------------------------------------------------------------
-
-```{r}
-rmarkdown::render("shiny_dashboard.Rmd", output_format = "flexdashboard::flex_dashboard")
-```
-
 
