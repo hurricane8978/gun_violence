@@ -1,9 +1,9 @@
 ---
-title: "Report"
+title: "Report" 
 output: html_document
 ---
 
-```{r}
+```{r message=FALSE, echo=FALSE}
 library(tidyverse)
 library(ggplot2)
 library(rvest)
@@ -22,19 +22,12 @@ library(dplyr)
  
 This project is overall motivated by two gun violence incidents in 2021 in which two Chinese students  were killed brutally. As a team of Chinese, we feel grief-stricken for our compatriots’ death and it motivates us to question and investigate the safety issues when studying in the U.S as international students. Under this circumstance, our group members are inspired to study gun violence and explore the relationship between gun crime rate and Covid-19 outbreak.
  
-##Motivating sources
+## Motivating sources <br>
 
-“2020 was the deadliest gun violence year in decades. So far, 2021 is worse” from The Washington Post
-(https://www.washingtonpost.com/nation/2021/06/14/2021-gun-violence/)
-
-“Shootings never stopped during the pandemic: 2020 was the deadliest gun violence year in decades” from The Washington Post
-(https://www.washingtonpost.com/nation/2021/03/23/2020-shootings/)
-
-“Surging COVID-19 cases threaten to send NYC and US economy into second tailspin” from Nydailynews
-(https://www.nydailynews.com/coronavirus/ny-coronavirus-unemployment-pandemic-case-rate-20201112-u577rg47bjbhlgaqcgyjjj5xtq-story.html)
-
-“Suspect Charged in Death of University of Chicago Student” from USNEWS
-(https://www.usnews.com/news/us/articles/2021-11-12/slaying-of-chinese-student-in-chicago-spurs-call-for-action)
+[_The Washington Post_: "2020 was the deadliest gun violence year in decades. So far, 2021 is worse."](https://www.washingtonpost.com/nation/2021/06/14/2021-gun-violence/) <br>
+[_The Washington Post_: “Shootings never stopped during the pandemic: 2020 was the deadliest gun violence year in decades”](https://www.washingtonpost.com/nation/2021/03/23/2020-shootings/) <br>
+[_Nydailynews_: “Surging COVID-19 cases threaten to send NYC and US economy into second tailspin”](https://www.nydailynews.com/coronavirus/ny-coronavirus-unemployment-pandemic-case-rate-20201112-u577rg47bjbhlgaqcgyjjj5xtq-story.html) <br>
+[_USNEWS_: “Suspect Charged in Death of University of Chicago Student”](https://www.usnews.com/news/us/articles/2021-11-12/slaying-of-chinese-student-in-chicago-spurs-call-for-action) <br> 
  
 ## Questions
 
@@ -52,94 +45,71 @@ Gun Violence Archive – (https://www.gunviolencearchive.org)
 NYC OpenData – (https://opendata.cityofnewyork.us/)
 Bureau of Labor Statistics – (https://www.bls.gov/)
 
-1.National Mass Shooting Dataset
+### National Mass Shooting Dataset
 
 This dataset collects every mass-shooting incident that occurred from November 2017 to November 2021 in the US. According to Gun Violence Archive, definition of mass-shooting is that in one gun violence incident, there is a minimum of four victims shot, either injured or killed, not including any shooter who may also have been killed or injured in the incident.
  
-Variables: 
-day
-month
-year
-state
-number_killed: number of killed in a mass shooting incident
-number_injuried: number of injuried in a mass shooting incident
-number_year_killed: total number of killed in a specific state  in a year
-number_year_injuried: total number of injuried in a specific state  in a year
+#### Variables: <br>
+* day <br>
+* month <br>
+* year <br>
+* state <br>
+* number_killed: number of killed in a mass shooting incident <br>
+* number_injuried: number of injuried in a mass shooting incident <br>
+* number_year_killed: total number of killed in a specific state  in a year <br>
+* number_year_injuried: total number of injuried in a specific state  in a year <br>
  
-Data cleaning:
+#### Data cleaning:
 The data was first imported into R and we renamed some of the variables. Since the data for 2017 is too small, we decided to remove them and only keep the  data from January 2018 to  November 2021. In order to study the victims in mass-shooting from 2018 to 2021, we counted the number of killed and injured in different states every year and created two new variables.
 
-2. NY Shooting Incidents Dataset
+### NY Shooting Incidents Dataset
 
 List of every shooting incident that occurred in NYC during the current calendar year.
 This is a breakdown of every shooting incident that occurred in NYC during the current calendar year. This data is manually extracted every quarter and reviewed by the Office of Management Analysis and Planning before being posted on the NYPD website.
 Each record represents a shooting incident in NYC and includes information about the event, the location and time of occurrence. In addition, information related to suspect and victim demographics is also included. This data can be used by the public to explore the nature of police enforcement activity. Please refer to the attached data footnotes for additional information about this dataset.
 
-Variables:
-INCIDENT_KEY	
-OCCUR_DATE	
-Exact date of the shooting incident
-OCCUR_TIME	
-Exact time of the shooting incident
-BORO	
-Borough where the shooting incident occurred
-PRECINCT	
-Precinct where the shooting incident occurred
-JURISDICTION_CODE	
-Jurisdiction where the shooting incident occurred. Jurisdiction codes 0(Patrol), 1(Transit) and 2(Housing) represent NYPD whilst codes 3 and more represent non NYPD jurisdictions
-LOCATION_DESC	
-Location of the shooting incident
-STATISTICAL_MURDER_FLAG	
-Shooting resulted in the victim’s death which would be counted as a murder
-PERP_AGE_GROUP	
-Perpetrator’s age within a category
-PERP_SEX	
-Perpetrator’s sex description
-PERP_RACE	
-Perpetrator’s race description
-VIC_AGE_GROUP	
-Victim’s age within a category
-VIC_SEX	
-Victim’s sex description
-VIC_RACE	
-Victim’s race description
-X_COORD_CD	
-Midblock X-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)
-Y_COORD_CD	
-Midblock Y-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)
-Latitude	
-Latitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)
-Longitude	
-Longitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)
+#### Variables: 
+* INCIDENT_KEY	<br>
+* OCCUR_DATE	<br>
+* Exact date of the shooting incident <br>
+* OCCUR_TIME	<br>
+* Exact time of the shooting incident <br>
+* BORO	 <br>
+* Borough where the shooting incident occurred <br>
+* PRECINCT	<br>
+* Precinct where the shooting incident occurred <br>
+* JURISDICTION_CODE:Jurisdiction where the shooting incident occurred. Jurisdiction codes 0(Patrol), 1(Transit) and 2(Housing) represent NYPD whilst codes 3 and more represent non NYPD jurisdictions <br>
+* LOCATION_DESC: Location of the shooting incident  <br>
+* STATISTICAL_MURDER_FLAG: Shooting resulted in the victim’s death which would be counted as a murder <br>
+* PERP_AGE_GROUP: Perpetrator’s age within a category <br>
+* PERP_SEX: Perpetrator’s sex description <br>
+* PERP_RACE: Perpetrator’s race description <br>
+* VIC_AGE_GROUP: Victim’s age within a category <br>
+* VIC_SEX: Victim’s sex description <br>
+* VIC_RACE: Victim’s race description <br>
+* X_COORD_CD:Midblock X-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104) <br>
+* Y_COORD_CD: Midblock Y-coordinate for New York State Plane Coordinate System, Long * Island Zone, NAD 83, units feet (FIPS 3104) <br>
+* Latitude: Latitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326) <br>
+* Longitude: Longitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326) <br>
 
 
-Data cleaning:
-In general, we delete the incident id and coordinate data.
+#### Data cleaning:
+First, we combined two datasets of New York gun violence incidents in order for time consistency with the national mass shooting dataset from 2018 to 2021. Then we separate the occur- time into day, month and year. In order to get the change of gun violence incidents after covid-19, we again separate our dataframe into two small dataframe. one concludes the data during 2018-2019, means pre-covid, another concludes the data during 2020-2021, means during covid. In this way, we could see the gun violence incidents in each month of each year through visualizations and also see the changes with covid-19. 
 
 
-3.Unemployment rate Dataset
+### Unemployment rate Dataset
 
 This dataset collects the unemployment rate of each state from 2017 to 2021, which contains the pre_Covid19 period and during_Covid19 period.
  
-Variables:
-
-series_id: the number id of each state.
-year
-period: the number of month in a year
-label: the year and month of our unemployment rate
-value: the unemployment rate of each state
+#### Variables:
+* series_id: the number id of each state. <br>
+* year <br>
+* period: the number of month in a year <br>
+* label: the year and month of our unemployment rate <br>
+* value: the unemployment rate of each state <br>
  
-Data cleaning:
+#### Data cleaning:
 First of all, in the face of this data set, the name of each state is not directly displayed. Instead, the numeric ID corresponding to each state is used. We first correspond to the digital ID of each state from the official website, and then change each digital ID to the corresponding state name in order to unify the variables with our other datasets. Secondly, the period variable is the month of the unemployment rate, which is made up of a capital M plus the number of the corresponding month. We unify them as the abbreviation of the month of the factor type. Next, we hope to study the relationship between the unemployment rate and the number of shootings. We combined the two data sets by state, year, and month so that we could see the unemployment rate and shooting numbers corresponding to a state in each month of each year through visualizations.
-
-
- 
-New York
- 
-Data cleaning:
-
-First, we combined two datasets of New York gun violence incidents in order for time consistency with the national mass shooting dataset from 2018 to 2021. Then we separate the occur- time into day, month and year. In order to get the change of gun violence incidents after covid-19, we again separate our dataframe into two small dataframe. one concludes the data during 2018-2019, means pre-covid, another concludes the data during 2020-2021, means during covid. In this way, we could see the gun violence incidents in each month of each year through visualizations and also see the changes with covid-19. 
-
 
 ## Visualization
 
@@ -399,5 +369,12 @@ The outcome shows that the second one has a higher possibility to be a murder, w
 
 Although we first believed that there should be a linear relationship between unemployment rate and number of mass-shooting, counterintuitively, our analysis and visualizations demonstrated that they are actually not related linearly. From our time series analysis, we observed an upward trend in the number of mass shootings and some seasonality in Illinois from 2018-2021. We then made a prediction for 2022 and noticed that it follows the general trend and seasonality from previous years, which means that the average number of mass shootings in Illinois will keep increasing in 2022 and most of them would happen in the middle of the year. Therefore, we would suggest the local police department institute additional security patrols and the government should take some measure to prevent aggressive individuals from obtaining weapons. 
 
-From the logistic regression analysis, we can conclude that shooting incidents happen in BROOKLYN and MANHATTAN are less likely to be a murder; when perpetrators' age increases, the probability that this shooting incident to become a murder also increases. This conclusion holds for victims; and shooting incidents happen in the morning are more like to be a murder. Because murder is hard to prevent, it is hard for us to suggest an effective measure to prevent a murder from happening.
+From the logistic regression analysis, we can conclude that shooting incidents happen in BROOKLYN and MANHATTAN are less likely to be a murder; when perpetrators' age increases, the probability that this shooting incident to become a murder also increases. This conclusion holds for victims; and shooting incidents happen in the morning are more like to be a murder. Because murder is hard to prevent, it is hard for us to suggest an effective measure to prevent a murder from happening. However, such kind of prediction could be used before interrogating the perpetrators. For example, from the analysis above, perpetrators aged above 45 are more likely to be a murderer. Therefore, we could use this prediction to make better assessment of whether they tried to make excuses during interrogation because a murder is considered to be more severe than other types of killing. 
+
+Our analysis might have some limitations. First, for our regression analysis, the variables we had from our dataset are limited, which means we are not able to consider other variables such as the income of the perpetrator and their education.
+Therefore, even though our prediction model is decent, it would not be significantly precise. In addition, in our time series analysis, we don't have enough data under the global pandemic. Thus, the prediction might not be as precise as we originally thought since the pandemic may continue to rage in 2022. 
+
+All in all, gun violence is always brutal. We probably need relavent policies to prevent it from prevailing. For instance, we could try to regulate the allocation of weapons by asking individuals to pass a psychological test. With more attention being paid on the issue of gun violence, we believe such serious condition could be alleviated some day in the future.
+
+
 

@@ -31,5 +31,22 @@ Jie Liu, Xiaoluo Jiao, Ziqian He, Yu Si, Xinyuan Liu, Tianchuan Gao
 </div>
 <font size = "3">*Police work a crime scene in Chicago on Nov. 19, 2019. Despite a statewide shelter-in-place order in an attempt to stop the spread of the coronavirus, the city is still facing high levels of gun violence. *</font>
 
-
+<center><div class="container_video"> 
+ <iframe width="650" height="410"
+  src="https://www.youtube.com/embed/9glfCfrTv-E" 
+ frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
+ </div></center> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 

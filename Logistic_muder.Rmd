@@ -1,10 +1,6 @@
 ---
-title: "Will a shooting incident become a murder?--a logistic regression approach"
-<<<<<<< HEAD
-output: 
-=======
+title: "A logistic regression approach on the malicity of shooting incident: a murder or a homicide?"
 output:
->>>>>>> 8598f0120aaa2c44d64222fa917ce62f21cde2d6
   html_document:
     toc: true
     toc_float: true
@@ -34,11 +30,11 @@ library(glmnet)
 library(pROC)
 library(RTextTools)
 ```
-In the NYPD shooting incident database, a variable is called STATISTICAL_MURDER_FLAG which indicates if this shooting incident counted as a murder. It has a binary outcome "TRUE" or "FALSE". We will use logistic regression model to identify if a shooting can become a murder.
+In the NYPD shooting incident database, a variable is called STATISTICAL_MURDER_FLAG which indicates if this shooting incident is classified as a murder. It has a binary outcome "TRUE" or "FALSE". We will use logistic regression model to identify if a shooting can be classified as a murder.
 
 ## Data Import
 
-```{r message=FALSE, warning=FALSE, results = 'hide'}
+```{r message=FALSE, echo = FALSE, warning=FALSE, results = 'hide'}
 historic_NYPD_df = read_csv("./data/NYPD_Shooting_Incident_Data__Historic_.csv") 
 year_to_date_df = read_csv("./data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
 df = bind_rows(historic_NYPD_df,year_to_date_df) 
@@ -78,43 +74,36 @@ df=df[df$VIC_AGE_GROUP != "UNKNOWN", ]
 
 ## Model Selection
 First, build the initial logistic regression model with all variables
-<<<<<<< HEAD
-```{r results = 'hide'}
-=======
-```{r,class.output="scroll-200"}
->>>>>>> 8598f0120aaa2c44d64222fa917ce62f21cde2d6
+
+```{r, class.output="scroll-200"}
+
 fit = glm(STATISTICAL_MURDER_FLAG ~ BORO+PERP_AGE_GROUP+PERP_SEX+PERP_RACE+VIC_AGE_GROUP+VIC_SEX+VIC_RACE+time_period+month,data=df,family = binomial())
 summary(fit)
 ```
 we can see from the above result that some variables do not pass the significance test. Now, we can use the stepwise method to choose variables.
 
-<<<<<<< HEAD
-```{r results = 'hide'}
-=======
-```{r,,class.output="scroll-200"}
->>>>>>> 8598f0120aaa2c44d64222fa917ce62f21cde2d6
+
+
+```{r, class.output="scroll-200"}
+
 step(fit)
 ```
 
 Now, we test the reduced model from the above result
-<<<<<<< HEAD
-```{r results = 'hide'}
-=======
-```{r,,class.output="scroll-200"}
->>>>>>> 8598f0120aaa2c44d64222fa917ce62f21cde2d6
+
+
+```{r,class.output="scroll-200"}
+
 fit_2 = glm(formula = STATISTICAL_MURDER_FLAG ~ BORO + PERP_AGE_GROUP + 
     PERP_RACE + VIC_AGE_GROUP + VIC_RACE + time_period, family = binomial(), 
     data = df)
 summary(fit_2)
 ```
-<<<<<<< HEAD
-We can see that PERP_RACE and PERP_RACE still not pass the significance test, now drop these two and run again
-```{r results = 'hide'}
-=======
 
-We can see that PERP_RACE and VIC_RACE still not pass the significance test, now drop these two and run again
+
+We can see that PERP_RACE and VIC_RACE still don't pass the significance test, now we drop these two and run again
 ```{r,,class.output="scroll-200"}
->>>>>>> 8598f0120aaa2c44d64222fa917ce62f21cde2d6
+
 fit_3 = glm(formula = STATISTICAL_MURDER_FLAG ~ BORO + PERP_AGE_GROUP + 
               VIC_AGE_GROUP +  time_period, family = binomial(), 
     data = df)
@@ -134,11 +123,10 @@ df$PERP_65 =ifelse(df$PERP_AGE_GROUP=="65+",1,0)
 ```
 
 Run logistic regression with these dummy variables again and use stepwise method to filter.
-<<<<<<< HEAD
-```{r results = 'hide'}
-=======
-```{r,,class.output="scroll-200"}
->>>>>>> 8598f0120aaa2c44d64222fa917ce62f21cde2d6
+
+
+```{r,class.output="scroll-200"}
+
 fit_4 = glm(formula = STATISTICAL_MURDER_FLAG ~ QUEENS + STATEN + BROOKLYN + MANHATTAN + PERP_18 + PERP_25 + PERP_45 + PERP_65 + 
               VIC_AGE_GROUP +  time_period, family = binomial(), 
     data = df)
@@ -147,18 +135,17 @@ step(fit_4)
 ```
 
 now,we can run the model for the last time
-<<<<<<< HEAD
-```{r results = 'hide'}
-=======
-```{r,,class.output="scroll-200"}
->>>>>>> 8598f0120aaa2c44d64222fa917ce62f21cde2d6
+
+
+```{r,class.output="scroll-200"}
+
 fit_5 = glm(formula = STATISTICAL_MURDER_FLAG ~ BROOKLYN + MANHATTAN + 
     PERP_25 + PERP_45 + PERP_65 + VIC_AGE_GROUP + time_period, 
     family = binomial(), data = df)
 summary(fit_5)
 ```
 
-This model seems ok with all variables having significance. Now we test for the accuracy 
+This model seems good with all variables having significance. Now we test for the accuracy 
 ```{r}
 ifMudrer = function(glm.model, threshold = 0.5) {
   pre.pro = predict(glm.model, type = "response")
@@ -169,7 +156,7 @@ recall_accuracy(df$STATISTICAL_MURDER_FLAG,ifMudrer(fit_5))
 
 
 ## ROC plot
-A receiver operating characteristic curve, or ROC curve, is a graphical plot that illustrates the diagnostic ability of a binary classifier system as its discrimination threshold is varied.The ROC curve is created by plotting the true positive rate (TPR) against the false positive rate (FPR) at various threshold settings.
+A receiver operating characteristic curve, or ROC curve, is a graphical plot that illustrates the diagnostic ability of a binary classifier system as its discrimination threshold is varied. The ROC curve is created by plotting the true positive rate (TPR) against the false positive rate (FPR) at various threshold settings.
 ```{r}
 roc(df$STATISTICAL_MURDER_FLAG, predict(fit_5, type = "response"), algorithm = 3) %>% 
   plot(auc.polygon = T,  print.thres = T, print.auc = T)
@@ -183,7 +170,7 @@ At first, we would like to see the significance for each variable
 ```{r}
 exp(fit_5$coefficients)
 ```
-we can have the following conclusion:  
+With the above results, we can have the following conclusion:  
 -Shooting incidents happen in BROOKLYN and MANHATTAN are less likely to be a murder.  
 -When perpetrators' age increases, the probability that this shooting incident to become a murder also increases. This conclusion holds for victims.  
 -Shooting incidents happen in the morning are more like to be a murder.  
@@ -198,4 +185,4 @@ test_data$prob = predict(fit_5, newdata=test_data, type="response")
 test_data$prob
 
 ```
-We can see tha the second one has a higher possibility to be amurder.
+From the prediction, we can see that the second one has a higher possibility to be a murder.
