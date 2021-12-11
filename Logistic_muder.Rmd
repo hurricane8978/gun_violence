@@ -4,6 +4,7 @@ output:
   html_document:
     toc: true
     toc_float: true
+    code_folding: hide
 ---
 ```{css, echo=FALSE}
 pre {
@@ -33,8 +34,8 @@ library(RTextTools)
 In the NYPD shooting incident database, a variable is called STATISTICAL_MURDER_FLAG which indicates if this shooting incident is classified as a murder. It has a binary outcome "TRUE" or "FALSE". We will use logistic regression model to identify if a shooting can be classified as a murder.
 
 ## Data Import
-
-```{r message=FALSE, echo = FALSE, warning=FALSE, results = 'hide'}
+At first, import data from the NYPD shooting incident database
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 historic_NYPD_df = read_csv("./data/NYPD_Shooting_Incident_Data__Historic_.csv") 
 year_to_date_df = read_csv("./data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
 df = bind_rows(historic_NYPD_df,year_to_date_df) 
@@ -157,7 +158,7 @@ recall_accuracy(df$STATISTICAL_MURDER_FLAG,ifMudrer(fit_5))
 
 ## ROC plot
 A receiver operating characteristic curve, or ROC curve, is a graphical plot that illustrates the diagnostic ability of a binary classifier system as its discrimination threshold is varied. The ROC curve is created by plotting the true positive rate (TPR) against the false positive rate (FPR) at various threshold settings.
-```{r}
+```{r message=FALSE}
 roc(df$STATISTICAL_MURDER_FLAG, predict(fit_5, type = "response"), algorithm = 3) %>% 
   plot(auc.polygon = T,  print.thres = T, print.auc = T)
 ```
@@ -179,8 +180,9 @@ With the above results, we can have the following conclusion:
 For example, we have two shooting incidents now. We will use this model to predict which one has a higher probability to be a murder.  
 --A 36-year-old white female was killed by a 20-year-old black male at 10pm in Brooklyn.  
 --A 48-year-old Asian male was killed by a 54-year-old white male at 10am in Queens.  
-```{r}
+```{r warning=FALSE}
 test_data = data_frame(BROOKLYN = c(1,0) , MANHATTAN = c(0,0) ,PERP_25 = c(1,0),  PERP_45 =  c(0,1), PERP_65 = c(0,0) , VIC_AGE_GROUP = c("25-44","45-64"),VIC_RACE = c("WHITE","ASIAN"),VIC_SEX = c("F","M"),time_period=c("EVENING","MORNING"))
+test_data
 test_data$prob = predict(fit_5, newdata=test_data, type="response")
 test_data$prob
 
