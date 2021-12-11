@@ -2,8 +2,6 @@
 title: "National Visualization Analysis"
 output: 
   html_document:
-    toc: true
-    toc_float: true
     code_folding: hide
 ---
 
